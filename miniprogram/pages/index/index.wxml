@@ -1,0 +1,38 @@
+<!--index.wxml-->
+<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="welcome-section">
+      <view class="logo">
+        <text class="logo-icon">🎤</text>
+      </view>
+      <text class="title">英语读音测试</text>
+      <text class="subtitle">提升您的英语发音准确度</text>
+    </view>
+
+    <view class="features">
+      <view class="feature-item">
+        <text class="feature-icon">📚</text>
+        <text class="feature-title">丰富单词库</text>
+        <text class="feature-desc">包含多个难度等级的英语单词</text>
+      </view>
+      
+      <view class="feature-item">
+        <text class="feature-icon">🎯</text>
+        <text class="feature-title">精准识别</text>
+        <text class="feature-desc">智能分析您的发音准确度</text>
+      </view>
+      
+      <view class="feature-item">
+        <text class="feature-icon">💡</text>
+        <text class="feature-title">智能反馈</text>
+        <text class="feature-desc">提供个性化的发音改进建议</text>
+      </view>
+    </view>
+
+    <view class="action-section">
+      <button class="start-btn" bindtap="startTest">开始测试</button>
+      <text class="tip">点击开始，选择单词进行读音测试</text>
+    </view>
+  </view>
+</scroll-view>

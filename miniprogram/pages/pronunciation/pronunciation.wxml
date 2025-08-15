@@ -1,0 +1,115 @@
+<view class="container">
+  <view class="header">
+    <text class="title">英语读音测试</text>
+    <text class="subtitle">选择单词并开始测试</text>
+  </view>
+
+  <!-- 单词选择区域 -->
+  <view class="word-selector">
+    <view class="selector-container">
+      <picker 
+        bindchange="onWordSelect" 
+        value="{{selectedWordIndex}}" 
+        range="{{wordList}}" 
+        range-key="word"
+      >
+        <view class="picker-display">
+          <text class="picker-text">{{currentWord.word || '请选择单词'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+      <!-- 调试信息 -->
+      <view class="debug-info">
+        <text>单词列表长度: {{wordList.length}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 单词详情区域 -->
+  <view class="word-detail" wx:if="{{currentWord.word}}">
+    <view class="word-info">
+      <text class="word-title">{{currentWord.word}}</text>
+      <text class="word-phonetic">/{{currentWord.phonetic}}/</text>
+      <text class="word-meaning">{{currentWord.meaning}}</text>
+      
+      <!-- 难度信息 -->
+      <view class="difficulty-info" wx:if="{{difficultyInfo}}">
+        <text class="difficulty-title">难度等级：</text>
+        <view class="difficulty-badge difficulty-{{difficultyInfo.level}}">
+          <text class="difficulty-text">{{difficultyInfo.level === 'easy' ? '简单' : difficultyInfo.level === 'medium' ? '中等' : '困难'}}</text>
+        </view>
+      </view>
+
+      <!-- 音素分析 -->
+      <view class="phoneme-analysis" wx:if="{{phonemeInfo.length > 0}}">
+        <text class="analysis-title">音素分析：</text>
+        <view class="phoneme-list">
+          <view class="phoneme-item" wx:for="{{phonemeInfo}}" wx:key="index">
+            <text class="phoneme-text">{{item.phoneme}}</text>
+            <text class="phoneme-type">{{item.type}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 发音建议 -->
+      <view class="pronunciation-tips" wx:if="{{pronunciationTips.length > 0}}">
+        <text class="tips-title">发音建议：</text>
+        <view class="tips-list">
+          <text class="tip-item" wx:for="{{pronunciationTips}}" wx:key="index">• {{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 录音测试区域 -->
+    <view class="recording-section">
+      <view class="microphone-container">
+        <view 
+          class="microphone-btn {{isRecording ? 'recording' : ''}}" 
+          bindtap="toggleRecording"
+        >
+          <view class="mic-icon">
+            <text class="icon-text">{{isRecording ? '⏹' : '🎤'}}</text>
+          </view>
+          <text class="mic-text">{{isRecording ? '录音中...' : '点击开始录音'}}</text>
+        </view>
+      </view>
+
+      <!-- 录音结果 -->
+      <view class="result-section" wx:if="{{recognitionResult}}">
+        <view class="result-title">识别结果</view>
+        <view class="comparison">
+          <view class="original">
+            <text class="label">原单词：</text>
+            <text class="text">{{currentWord.word}}</text>
+          </view>
+          <view class="recognized">
+            <text class="label">识别结果：</text>
+            <text class="text">{{recognitionResult}}</text>
+          </view>
+        </view>
+        
+        <view class="accuracy-section">
+          <view class="accuracy-bar">
+            <view class="accuracy-fill" style="width: {{accuracyScore}}%"></view>
+          </view>
+          <text class="accuracy-text">准确度：{{accuracyScore}}%</text>
+        </view>
+
+        <view class="feedback-section" wx:if="{{feedback}}">
+          <text class="feedback-title">发音建议：</text>
+          <text class="feedback-text">{{feedback}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="btn btn-primary" bindtap="retryTest" wx:if="{{recognitionResult}}">重新测试</button>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!currentWord.word}}">
+    <text class="empty-text">请从上方选择要测试的单词</text>
+  </view>
+</view> 

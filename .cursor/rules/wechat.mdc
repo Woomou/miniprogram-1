@@ -1,0 +1,4 @@
+---
+alwaysApply: true
+---
+1. 使用/Applications/wechatwebdevtools.app/Contents/MacOS/cli来沟通wechat developer tools CLI来进行构建和调试；

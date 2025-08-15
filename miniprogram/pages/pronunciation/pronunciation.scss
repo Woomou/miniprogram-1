@@ -1,0 +1,414 @@
+.container {
+  padding: 40rpx 30rpx;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #7f8c8d;
+}
+
+/* 单词选择器样式 */
+.word-selector {
+  margin-bottom: 40rpx;
+}
+
+.selector-container {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.picker-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #ecf0f1;
+}
+
+.picker-text {
+  font-size: 32rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.picker-arrow {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.debug-info {
+  margin-top: 20rpx;
+  padding: 10rpx;
+  background: #f8f9fa;
+  border-radius: 10rpx;
+  text-align: center;
+}
+
+.debug-info text {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+/* 单词详情样式 */
+.word-detail {
+  animation: fadeIn 0.3s ease;
+}
+
+.word-info {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.word-title {
+  display: block;
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 20rpx;
+}
+
+.word-phonetic {
+  display: block;
+  font-size: 32rpx;
+  color: #7f8c8d;
+  margin-bottom: 15rpx;
+}
+
+.word-meaning {
+  display: block;
+  font-size: 28rpx;
+  color: #95a5a6;
+  margin-bottom: 30rpx;
+}
+
+/* 难度信息样式 */
+.difficulty-info {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #ecf0f1;
+}
+
+.difficulty-title {
+  display: block;
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 15rpx;
+}
+
+.difficulty-badge {
+  display: inline-block;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  margin-bottom: 15rpx;
+}
+
+.difficulty-easy {
+  background: #d5f4e6;
+  color: #27ae60;
+}
+
+.difficulty-medium {
+  background: #fef9e7;
+  color: #f39c12;
+}
+
+.difficulty-hard {
+  background: #fadbd8;
+  color: #e74c3c;
+}
+
+.difficulty-text {
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+/* 音素分析样式 */
+.phoneme-analysis {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #ecf0f1;
+}
+
+.analysis-title {
+  display: block;
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 20rpx;
+}
+
+.phoneme-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15rpx;
+}
+
+.phoneme-item {
+  background: #ecf0f1;
+  border-radius: 15rpx;
+  padding: 15rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80rpx;
+}
+
+.phoneme-text {
+  font-size: 24rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5rpx;
+}
+
+.phoneme-type {
+  font-size: 20rpx;
+  color: #7f8c8d;
+}
+
+/* 发音建议样式 */
+.pronunciation-tips {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #ecf0f1;
+}
+
+.tips-title {
+  display: block;
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 15rpx;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.tip-item {
+  font-size: 22rpx;
+  color: #2c3e50;
+  line-height: 1.5;
+  padding: 10rpx 15rpx;
+  background: #f8f9fa;
+  border-radius: 10rpx;
+  border-left: 4rpx solid #3498db;
+}
+
+/* 录音区域样式 */
+.recording-section {
+  background: #ffffff;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.microphone-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30rpx;
+}
+
+.microphone-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40rpx;
+  border-radius: 50%;
+  background: #3498db;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  min-width: 200rpx;
+  min-height: 200rpx;
+  justify-content: center;
+}
+
+.microphone-btn.recording {
+  background: #e74c3c;
+  animation: pulse 1.5s infinite;
+}
+
+.mic-icon {
+  margin-bottom: 20rpx;
+}
+
+.icon-text {
+  font-size: 60rpx;
+}
+
+.mic-text {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+/* 结果区域样式 */
+.result-section {
+  margin-top: 30rpx;
+  padding-top: 30rpx;
+  border-top: 2rpx solid #ecf0f1;
+}
+
+.result-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+
+.comparison {
+  margin-bottom: 30rpx;
+}
+
+.original,
+.recognized {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 15rpx;
+}
+
+.label {
+  font-size: 26rpx;
+  color: #7f8c8d;
+  margin-right: 20rpx;
+  min-width: 120rpx;
+}
+
+.text {
+  font-size: 28rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.accuracy-section {
+  margin-bottom: 30rpx;
+}
+
+.accuracy-bar {
+  width: 100%;
+  height: 20rpx;
+  background: #ecf0f1;
+  border-radius: 10rpx;
+  overflow: hidden;
+  margin-bottom: 15rpx;
+}
+
+.accuracy-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #e74c3c 0%, #f39c12 50%, #27ae60 100%);
+  border-radius: 10rpx;
+  transition: width 0.5s ease;
+}
+
+.accuracy-text {
+  font-size: 26rpx;
+  color: #7f8c8d;
+  text-align: center;
+  display: block;
+}
+
+.feedback-section {
+  background: #f8f9fa;
+  border-radius: 15rpx;
+  padding: 20rpx;
+}
+
+.feedback-title {
+  font-size: 26rpx;
+  color: #7f8c8d;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.feedback-text {
+  font-size: 26rpx;
+  color: #2c3e50;
+  line-height: 1.5;
+}
+
+/* 操作按钮样式 */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  padding: 25rpx 40rpx;
+  border-radius: 15rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+  min-width: 200rpx;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: #ffffff;
+}
+
+.btn-primary:active {
+  background: #2980b9;
+}
+
+/* 空状态样式 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 0;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #95a5a6;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

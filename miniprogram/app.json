@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/pronunciation/pronunciation",
+    "pages/index/index",
+    "pages/logs/logs"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationStyle": "custom"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "requiredBackgroundModes": ["audio"]
+}
