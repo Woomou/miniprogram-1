@@ -2,7 +2,8 @@
   "pages": [
     "pages/pronunciation/pronunciation",
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/wordList/wordList"
   ],
   "window": {
     "navigationBarTextStyle": "black",

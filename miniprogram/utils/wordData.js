@@ -1,4 +1,4 @@
-export const wordList = [
+const wordList = [
   // 简单单词
   {
     id: 1,
@@ -131,7 +131,7 @@ export const wordList = [
  * @param difficulty 难度等级
  * @returns 对应难度的单词列表
  */
-export function getWordsByDifficulty(difficulty) {
+function getWordsByDifficulty(difficulty) {
   return wordList.filter((word) => word.difficulty === difficulty);
 }
 
@@ -140,7 +140,7 @@ export function getWordsByDifficulty(difficulty) {
  * @param category 分类
  * @returns 对应分类的单词列表
  */
-export function getWordsByCategory(category) {
+function getWordsByCategory(category) {
   return wordList.filter((word) => word.category === category);
 }
 
@@ -148,7 +148,7 @@ export function getWordsByCategory(category) {
  * 获取所有分类
  * @returns 所有分类列表
  */
-export function getAllCategories() {
+function getAllCategories() {
   const categories = wordList.map((word) => word.category).filter(Boolean);
   return [...new Set(categories)];
 }
@@ -158,7 +158,15 @@ export function getAllCategories() {
  * @param count 单词数量
  * @returns 随机单词列表
  */
-export function getRandomWords(count) {
+function getRandomWords(count) {
   const shuffled = [...wordList].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 }
+
+module.exports = {
+  wordList,
+  getWordsByDifficulty,
+  getWordsByCategory,
+  getAllCategories,
+  getRandomWords,
+};

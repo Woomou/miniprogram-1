@@ -1,0 +1,29 @@
+<!-- 单词列表页面 -->
+<view class="container">
+  <view class="header">
+    <text class="title">单词列表</text>
+  </view>
+  
+  <scroll-view class="word-list" scroll-y="true">
+    <view class="word-item" 
+          wx:for="{{wordList}}" 
+          wx:key="id" 
+          bindtap="selectWord"
+          data-word="{{item}}">
+      <view class="word-content">
+        <view class="word-info">
+          <text class="word">{{item.word}}</text>
+          <text class="phonetic">{{item.phonetic}}</text>
+        </view>
+        <view class="meaning-info">
+          <text class="meaning">{{item.meaning}}</text>
+          <text class="category">{{item.category}}</text>
+        </view>
+        <view class="difficulty-tag difficulty-{{item.difficulty}}">
+          {{item.difficulty}}
+        </view>
+      </view>
+      <view class="arrow">></view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,8 +1,10 @@
 import { SpeechRecognitionService } from '../../utils/pronunciation';
-import { Word } from '../../utils/wordData';
+import { Word, wordList } from '../../utils/wordData';
 
 Page({
   data: {
+    wordList: [] as Word[],
+    selectedWordIndex: 0,
     currentWord: {} as Word,
     isRecording: false,
     recognitionResult: '',
@@ -14,6 +16,11 @@ Page({
   tempFilePath: '',
 
   onLoad(options: any) {
+    // 初始化单词列表
+    this.setData({
+      wordList,
+    });
+
     if (options.word) {
       const word = JSON.parse(decodeURIComponent(options.word));
       this.setData({
@@ -23,6 +30,20 @@ Page({
 
     // 初始化录音管理器
     this.initRecorderManager();
+  },
+
+  // 单词选择处理
+  onWordSelect(e: any) {
+    const index = e.detail.value;
+    const word = this.data.wordList[index];
+
+    this.setData({
+      selectedWordIndex: index,
+      currentWord: word,
+      recognitionResult: '',
+      accuracyScore: 0,
+      feedback: '',
+    });
   },
 
   initRecorderManager() {

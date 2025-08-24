@@ -1,0 +1,167 @@
+/* 单词列表页面样式 */
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 0;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40rpx 40rpx 30rpx;
+  color: white;
+  box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.15);
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+}
+
+.word-list {
+  padding: 20rpx;
+  height: calc(100vh - 200rpx);
+}
+
+.word-item {
+  background: white;
+  margin-bottom: 20rpx;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1rpx solid #f0f0f0;
+
+  &:hover {
+    transform: translateY(-2rpx);
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.word-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.word-info {
+  display: flex;
+  align-items: baseline;
+  gap: 20rpx;
+  margin-bottom: 8rpx;
+}
+
+.word {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  letter-spacing: 0.5rpx;
+}
+
+.phonetic {
+  font-size: 28rpx;
+  color: #7f8c8d;
+  font-style: italic;
+  background: #f8f9fa;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #e9ecef;
+}
+
+.meaning-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meaning {
+  font-size: 28rpx;
+  color: #34495e;
+  font-weight: 500;
+}
+
+.category {
+  font-size: 24rpx;
+  color: #95a5a6;
+  background: #ecf0f1;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.difficulty-tag {
+  font-size: 22rpx;
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5rpx;
+  min-width: 80rpx;
+  text-align: center;
+
+  &.difficulty-easy {
+    background: linear-gradient(135deg, #a8e6cf, #7fcdcd);
+    color: #2d5a27;
+  }
+
+  &.difficulty-medium {
+    background: linear-gradient(135deg, #ffd93d, #ff6b6b);
+    color: #8b4513;
+  }
+
+  &.difficulty-hard {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    color: #ffffff;
+  }
+}
+
+.arrow {
+  font-size: 32rpx;
+  color: #bdc3c7;
+  font-weight: 300;
+  margin-left: 20rpx;
+  transition: color 0.3s ease;
+}
+
+.word-item:hover .arrow {
+  color: #667eea;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 100rpx 40rpx;
+  color: #95a5a6;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 40rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+/* 响应式调整 */
+@media (max-width: 320px) {
+  .word {
+    font-size: 32rpx;
+  }
+  
+  .phonetic {
+    font-size: 24rpx;
+  }
+  
+  .meaning {
+    font-size: 26rpx;
+  }
+}
