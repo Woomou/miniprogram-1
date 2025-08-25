@@ -148,13 +148,54 @@
         </view>
         
         <view class="analysis-content">
+          <!-- 单词拆分切片（可交互的按钮列表） -->
+          <view class="word-parts-section">
+            <view class="section-title">
+              <text class="title-text">单词拆分</text>
+            </view>
+            <view class="word-parts-list">
+              <view 
+                class="word-part-item interactive" 
+                wx:for="{{wordParts}}" 
+                wx:key="index"
+                wx:for-index="index"
+                data-part="{{item}}"
+                data-index="{{index}}"
+                bindtap="playWordPartAudio"
+              >
+                <text class="part-text">{{item}}</text>
+                <view class="play-icon">🔊</view>
+              </view>
+            </view>
+          </view>
+          
+          <!-- 音素拆分切片（只显示，不可交互） -->
+          <view class="phoneme-parts-section">
+            <view class="section-title">
+              <text class="title-text">音素拆分</text>
+            </view>
+            <view class="phoneme-parts-list">
+              <view 
+                class="phoneme-part-item" 
+                wx:for="{{phonemeList}}" 
+                wx:key="index"
+                wx:for-index="index"
+              >
+                <text class="phoneme-text">{{item}}</text>
+              </view>
+            </view>
+          </view>
+          
           <!-- 自然拼读模式 -->
           <view wx:if="{{readingMode === 'phonics'}}">
+            <view class="section-title">
+              <text class="title-text">自然拼读分析</text>
+            </view>
             <view class="phonics-breakdown">
               <view 
                 class="phonics-item interactive" 
                 wx:for="{{readingAnalysis.phonics}}" 
-                wx:key="*this"
+                wx:key="letters"
                 wx:for-index="index"
                 data-syllable="{{item.letters}}"
                 data-index="{{index}}"
@@ -169,11 +210,14 @@
           
           <!-- 音节拆分模式 -->
           <view wx:if="{{readingMode === 'syllable'}}">
+            <view class="section-title">
+              <text class="title-text">音节拆分分析</text>
+            </view>
             <view class="syllable-breakdown">
               <view 
                 class="syllable-item interactive" 
                 wx:for="{{readingAnalysis.syllables}}" 
-                wx:key="*this"
+                wx:key="index"
                 wx:for-index="index"
                 data-syllable="{{item}}"
                 data-index="{{index}}"

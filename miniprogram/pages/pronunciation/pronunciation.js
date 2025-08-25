@@ -2,6 +2,7 @@
 const { wordList } = require('../../utils/wordData');
 
 const { SpeechRecognitionService } = require('../../utils/pronunciation');
+const { phonicsAPI } = require('../../utils/phonicsAPI');
 
 Page({
   data: {
@@ -110,47 +111,60 @@ Page({
   },
 
   // 单词chip选择
-  selectWordChip(e) {
+  async selectWordChip(e) {
     const index = e.currentTarget.dataset.index;
-    this.selectWord(index);
+    await this.selectWord(index);
   },
   
   // 统一的单词选择方法
-  selectWord(index) {
+  async selectWord(index) {
     const word = this.data.wordList[index];
     if (!word) return;
     
-    // 生成音素列表
-    const phonemeList = this.generatePhonemeList(word.phonetic);
+    // 显示加载状态
+    wx.showLoading({ title: '加载中...' });
     
-    // 生成单词拆分（如果是复合词）
-    const wordParts = this.generateWordParts(word.word);
-    
-    // 生成示例口语
-    const usageExample = this.generateUsageExample(word);
-    
-    // 生成拼读分析
-    const readingAnalysis = this.generateReadingAnalysis(word, this.data.readingMode);
-    
-    // 生成词根助记
-    const { mnemonicMeanings, mnemonicExplanation } = this.generateMnemonicData(word, wordParts);
-    
-    this.setData({
-      selectedWordIndex: index,
-      currentWord: word,
-      phonemeList,
-      wordParts,
-      usageExample,
-      readingAnalysis,
-      mnemonicMeanings,
-      mnemonicExplanation,
-      // 清除之前的录音结果
-      recognitionResult: '',
-      accuracyScore: 0,
-      feedback: '',
-      recordingSyllableIndex: -1,
-      syllableRecognitionResults: {}
-    });
+    try {
+      // 生成音素列表
+      const phonemeList = this.generatePhonemeList(word.phonetic);
+      
+      // 生成单词拆分（如果是复合词）
+      const wordParts = await this.generateWordParts(word.word);
+      
+      // 生成示例口语
+      const usageExample = this.generateUsageExample(word);
+      
+      // 生成拼读分析
+      const readingAnalysis = await this.generateReadingAnalysis(word, this.data.readingMode);
+      
+      // 生成词根助记
+      const { mnemonicMeanings, mnemonicExplanation } = this.generateMnemonicData(word, wordParts);
+      
+      this.setData({
+        selectedWordIndex: index,
+        currentWord: word,
+        phonemeList,
+        wordParts,
+        usageExample,
+        readingAnalysis,
+        mnemonicMeanings,
+        mnemonicExplanation,
+        // 清除之前的录音结果
+        recognitionResult: '',
+        accuracyScore: 0,
+        feedback: '',
+        recordingSyllableIndex: -1,
+        syllableRecognitionResults: {}
+      });
+    } catch (error) {
+      console.error('选择单词时发生错误:', error);
+      wx.showToast({
+        title: '加载失败，请重试',
+        icon: 'error'
+      });
+    } finally {
+      wx.hideLoading();
+    }
   },
   
   // picker选择处理（兼容旧版本）
@@ -263,24 +277,64 @@ Page({
   },
   
   // 拼读模式切换
-  switchReadingMode(e) {
+  async switchReadingMode(e) {
     const mode = e.currentTarget.dataset.mode;
-    const readingAnalysis = this.generateReadingAnalysis(this.data.currentWord, mode);
     
-    this.setData({
-      readingMode: mode,
-      readingAnalysis
-    });
+    // 显示加载状态
+    wx.showLoading({ title: '切换模式中...' });
+    
+    try {
+      const readingAnalysis = await this.generateReadingAnalysis(this.data.currentWord, mode);
+      
+      this.setData({
+        readingMode: mode,
+        readingAnalysis
+      });
+    } catch (error) {
+      console.error('切换拼读模式时发生错误:', error);
+      wx.showToast({
+        title: '切换失败，请重试',
+        icon: 'error'
+      });
+    } finally {
+      wx.hideLoading();
+    }
   },
   
-  // 播放单词发音
-  playWordAudio() {
-    // 这里可以集成真实的音频播放功能
-    wx.showToast({
-      title: '播放发音: ' + this.data.currentWord.word,
-      icon: 'none',
-      duration: 1000
-    });
+  // 播放单词发音（使用API音频）
+  async playWordAudio() {
+    const word = this.data.currentWord.word;
+    if (!word) {
+      wx.showToast({
+        title: '请先选择单词',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    wx.showLoading({ title: '加载音频...' });
+    
+    try {
+      const audioData = await phonicsAPI.getAudio(word);
+      
+      if (audioData.audio_base64) {
+        // 使用API客户端的播放方法
+        phonicsAPI.playAudioFromBase64(audioData.audio_base64, audioData.audio_format);
+      } else {
+        throw new Error('音频数据为空');
+      }
+    } catch (error) {
+      console.error('播放单词音频失败:', error);
+      
+      // 回退到提示信息
+      wx.showToast({
+        title: '播放发音: ' + word,
+        icon: 'none',
+        duration: 1000
+      });
+    } finally {
+      wx.hideLoading();
+    }
   },
   
   // 显示详情
@@ -351,7 +405,7 @@ Page({
     });
   },
   
-  doStartSyllableRecording(syllable, index) {
+  async doStartSyllableRecording(syllable, index) {
     const options = {
       duration: 5000, // 音节录音时间较短，5秒
       sampleRate: 16000,
@@ -363,6 +417,15 @@ Page({
     this.recorderManager.onStop = (res) => {
       this.processSyllableAudio(res.tempFilePath, syllable, index);
     };
+
+    // 在开始录音前，先获取音节的音频作为参考
+    this.currentSyllableAudio = null;
+    try {
+      const audioData = await phonicsAPI.getAudio(syllable);
+      this.currentSyllableAudio = audioData;
+    } catch (error) {
+      console.log('获取音节参考音频失败，但不影响录音功能:', error);
+    }
 
     this.recorderManager.start(options);
     
@@ -398,19 +461,30 @@ Page({
       syllableResults[index] = {
         target: targetSyllable,
         recognized: result.text,
-        accuracy: result.accuracy
+        accuracy: result.accuracy,
+        referenceAudio: this.currentSyllableAudio // 包含参考音频
       };
       
       this.setData({
         syllableRecognitionResults: syllableResults
       });
 
-      // 显示结果
+      // 显示结果并提供播放参考音频的选项
       wx.showToast({
         title: `${targetSyllable}: ${result.accuracy}%`,
         icon: 'none',
         duration: 2000,
       });
+      
+      // 如果准确度较低且有参考音频，自动播放参考音频
+      if (result.accuracy < 70 && this.currentSyllableAudio && this.currentSyllableAudio.audio_base64) {
+        setTimeout(() => {
+          phonicsAPI.playAudioFromBase64(
+            this.currentSyllableAudio.audio_base64,
+            this.currentSyllableAudio.audio_format
+          );
+        }, 2000);
+      }
     } catch (error) {
       console.error('音节识别失败:', error);
       wx.showToast({
@@ -432,17 +506,49 @@ Page({
     return cleanPhonetic.split(/\s+/).filter(p => p.length > 0).map(p => '/' + p + '/');
   },
   
-  // 工具方法：生成单词拆分
-  generateWordParts(word) {
-    // 检查是否为复合词
-    const compoundWords = {
-      'schoolbag': ['school', 'bag'],
-      'basketball': ['basket', 'ball'],
-      'classroom': ['class', 'room'],
-      'homework': ['home', 'work']
-    };
-    
-    return compoundWords[word.toLowerCase()] || [];
+  // 工具方法：生成单词拆分（使用API）
+  async generateWordParts(word) {
+    try {
+      // 尝试使用API获取单词拆分
+      const response = await phonicsAPI.analyzeWord(word, false);
+      
+      // 从API响应中提取复合词部分（如果有的话）
+      if (response.analysis && response.analysis.has_compound_parts) {
+        return response.compound_parts || [];
+      }
+      
+      // 如果API没有复合词信息，回退到本地数据
+      const compoundWords = {
+        'schoolbag': ['school', 'bag'],
+        'basketball': ['basket', 'ball'],
+        'classroom': ['class', 'room'],
+        'homework': ['home', 'work'],
+        'playground': ['play', 'ground'],
+        'waterbottle': ['water', 'bottle'],
+        'sunlight': ['sun', 'light'],
+        'fireplace': ['fire', 'place'],
+        'birthday': ['birth', 'day']
+      };
+      
+      return compoundWords[word.toLowerCase()] || [];
+    } catch (error) {
+      console.error('获取单词拆分失败，使用本地数据:', error);
+      
+      // API失败时的本地回退数据
+      const compoundWords = {
+        'schoolbag': ['school', 'bag'],
+        'basketball': ['basket', 'ball'],
+        'classroom': ['class', 'room'],
+        'homework': ['home', 'work'],
+        'playground': ['play', 'ground'],
+        'waterbottle': ['water', 'bottle'],
+        'sunlight': ['sun', 'light'],
+        'fireplace': ['fire', 'place'],
+        'birthday': ['birth', 'day']
+      };
+      
+      return compoundWords[word.toLowerCase()] || [];
+    }
   },
   
   // 工具方法：生成示例口语
@@ -468,65 +574,130 @@ Page({
     return examples[word.word.toLowerCase()] || `This is an example with <b>${word.word}</b>.`;
   },
   
-  // 工具方法：生成拼读分析
-  generateReadingAnalysis(word, mode) {
+  // 工具方法：生成拼读分析（异步）
+  async generateReadingAnalysis(word, mode) {
     if (!word || !word.word) return null;
     
     if (mode === 'phonics') {
-      return this.generatePhonicsAnalysis(word);
+      return await this.generatePhonicsAnalysis(word);
     } else {
-      return this.generateSyllableAnalysis(word);
+      return await this.generateSyllableAnalysis(word);
     }
   },
   
-  // 生成自然拼读分析
-  generatePhonicsAnalysis(word) {
-    const phonicsMap = {
-      'apple': [
-        { letters: 'a', sound: '/æ/' },
-        { letters: 'pp', sound: '/p/' },
-        { letters: 'le', sound: '/əl/' }
-      ],
-      'hello': [
-        { letters: 'h', sound: '/h/' },
-        { letters: 'e', sound: '/ə/' },
-        { letters: 'll', sound: '/l/' },
-        { letters: 'o', sound: '/əʊ/' }
-      ],
-      'book': [
-        { letters: 'b', sound: '/b/' },
-        { letters: 'oo', sound: '/ʊ/' },
-        { letters: 'k', sound: '/k/' }
-      ]
-    };
-    
-    const phonics = phonicsMap[word.word.toLowerCase()] || [
-      { letters: word.word, sound: '/' + word.phonetic + '/' }
-    ];
-    
-    return {
-      phonics,
-      tips: '自然拼读法将字母与发音对应，帮助您掌握发音规则。'
-    };
+  // 生成自然拼读分析（使用API）
+  async generatePhonicsAnalysis(word) {
+    try {
+      // 使用API获取音素拆分
+      const response = await phonicsAPI.getPhonemes(word.word);
+      
+      if (response.basic_phonemes && response.basic_phonemes.length > 0) {
+        const phonics = response.basic_phonemes.map(phoneme => ({
+          letters: phoneme.grapheme,
+          sound: `/${phoneme.phoneme}/`,
+          type: phoneme.type,
+          description: phoneme.description
+        }));
+        
+        return {
+          phonics,
+          tips: '自然拼读法将字母与发音对应，帮助您掌握发音规则。'
+        };
+      }
+      
+      throw new Error('API响应中没有音素数据');
+    } catch (error) {
+      console.error('获取音素拆分失败，使用本地数据:', error);
+      
+      // API失败时的本地回退数据
+      const phonicsMap = {
+        'apple': [
+          { letters: 'a', sound: '/æ/' },
+          { letters: 'pp', sound: '/p/' },
+          { letters: 'le', sound: '/əl/' }
+        ],
+        'hello': [
+          { letters: 'h', sound: '/h/' },
+          { letters: 'e', sound: '/ə/' },
+          { letters: 'll', sound: '/l/' },
+          { letters: 'o', sound: '/əʊ/' }
+        ],
+        'book': [
+          { letters: 'b', sound: '/b/' },
+          { letters: 'oo', sound: '/ʊ/' },
+          { letters: 'k', sound: '/k/' }
+        ],
+        'beautiful': [
+          { letters: 'b', sound: '/b/' },
+          { letters: 'eau', sound: '/juː/' },
+          { letters: 't', sound: '/t/' },
+          { letters: 'i', sound: '/ɪ/' },
+          { letters: 'f', sound: '/f/' },
+          { letters: 'ul', sound: '/ʊl/' }
+        ],
+        'computer': [
+          { letters: 'c', sound: '/k/' },
+          { letters: 'o', sound: '/ə/' },
+          { letters: 'm', sound: '/m/' },
+          { letters: 'p', sound: '/p/' },
+          { letters: 'u', sound: '/juː/' },
+          { letters: 't', sound: '/t/' },
+          { letters: 'er', sound: '/ər/' }
+        ]
+      };
+      
+      const phonics = phonicsMap[word.word.toLowerCase()] || [
+        { letters: word.word, sound: '/' + word.phonetic + '/' }
+      ];
+      
+      return {
+        phonics,
+        tips: '自然拼读法将字母与发音对应，帮助您掌握发音规则。'
+      };
+    }
   },
   
-  // 生成音节拆分分析
-  generateSyllableAnalysis(word) {
-    const syllableMap = {
-      'apple': ['ap', 'ple'],
-      'hello': ['hel', 'lo'],
-      'book': ['book'],
-      'beautiful': ['beau', 'ti', 'ful'],
-      'computer': ['com', 'pu', 'ter'],
-      'pronunciation': ['pro', 'nun', 'ci', 'a', 'tion']
-    };
-    
-    const syllables = syllableMap[word.word.toLowerCase()] || [word.word];
-    
-    return {
-      syllables,
-      tips: '音节拆分帮助您更好地掌握单词的节奏和重音。'
-    };
+  // 生成音节拆分分析（使用API）
+  async generateSyllableAnalysis(word) {
+    try {
+      // 使用API获取音节拆分
+      const response = await phonicsAPI.getSyllables(word.word);
+      
+      // 优先使用Pyphen算法的结果，回退到基础算法
+      const syllables = response.pyphen_syllables || response.basic_syllables || [word.word];
+      
+      return {
+        syllables,
+        tips: '音节拆分帮助您更好地掌握单词的节奏和重音。',
+        count: response.pyphen_count || response.basic_count || 1
+      };
+    } catch (error) {
+      console.error('获取音节拆分失败，使用本地数据:', error);
+      
+      // API失败时的本地回退数据
+      const syllableMap = {
+        'apple': ['ap', 'ple'],
+        'hello': ['hel', 'lo'],
+        'book': ['book'],
+        'beautiful': ['beau', 'ti', 'ful'],
+        'computer': ['com', 'pu', 'ter'],
+        'pronunciation': ['pro', 'nun', 'ci', 'a', 'tion'],
+        'international': ['in', 'ter', 'na', 'tion', 'al'],
+        'communication': ['com', 'mu', 'ni', 'ca', 'tion'],
+        'responsibility': ['re', 'spon', 'si', 'bil', 'i', 'ty'],
+        'opportunity': ['op', 'por', 'tu', 'ni', 'ty'],
+        'technology': ['tech', 'nol', 'o', 'gy'],
+        'important': ['im', 'por', 'tant'],
+        'different': ['dif', 'fer', 'ent']
+      };
+      
+      const syllables = syllableMap[word.word.toLowerCase()] || [word.word];
+      
+      return {
+        syllables,
+        tips: '音节拆分帮助您更好地掌握单词的节奏和重音。'
+      };
+    }
   },
   
   // 生成词根助记数据

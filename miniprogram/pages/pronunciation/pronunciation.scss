@@ -485,6 +485,97 @@ $spacing-xxl: 64rpx;  // 32px
   margin: $spacing-md 0;
 }
 
+// Section Title
+.section-title {
+  margin-bottom: $spacing-md;
+  
+  .title-text {
+    font-size: 28rpx;
+    font-weight: 600;
+    color: $text-primary;
+  }
+}
+
+// Word Parts Section
+.word-parts-section {
+  margin-bottom: $spacing-lg;
+}
+
+.word-parts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  justify-content: center;
+}
+
+.word-part-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: $spacing-md $spacing-lg;
+  background: $chip-bg;
+  border-radius: $radius-sm;
+  min-width: 120rpx;
+  transition: all 0.2s ease;
+  
+  &.interactive {
+    cursor: pointer;
+    border: 2rpx solid transparent;
+    
+    &:hover {
+      background: $chip-active;
+      transform: translateY(-2rpx);
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+      background: #FEF3C7;
+      border-color: #F59E0B;
+    }
+  }
+  
+  .part-text {
+    font-size: 28rpx;
+    font-weight: 600;
+    color: $text-primary;
+    margin-right: $spacing-sm;
+  }
+  
+  .play-icon {
+    font-size: 24rpx;
+    color: $brand-500;
+  }
+}
+
+// Phoneme Parts Section
+.phoneme-parts-section {
+  margin-bottom: $spacing-lg;
+}
+
+.phoneme-parts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  justify-content: center;
+}
+
+.phoneme-part-item {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-md;
+  background: #F8FAFC;
+  border: 1rpx solid #E2E8F0;
+  border-radius: $radius-sm;
+  min-width: 80rpx;
+  
+  .phoneme-text {
+    font-size: 24rpx;
+    color: $text-secondary;
+    font-family: 'Times New Roman', serif;
+  }
+}
+
 // Phonics Breakdown
 .phonics-breakdown {
   display: flex;
