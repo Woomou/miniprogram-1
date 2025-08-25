@@ -1,105 +1,73 @@
-// 临时直接定义单词列表，避免导入问题
-const wordList = [
-  {
-    id: 1,
-    word: 'apple',
-    phonetic: 'ˈæpəl',
-    meaning: '苹果',
-    difficulty: 'easy',
-    category: '水果',
-  },
-  {
-    id: 2,
-    word: 'hello',
-    phonetic: 'həˈləʊ',
-    meaning: '你好',
-    difficulty: 'easy',
-    category: '问候',
-  },
-  {
-    id: 3,
-    word: 'book',
-    phonetic: 'bʊk',
-    meaning: '书',
-    difficulty: 'easy',
-    category: '物品',
-  },
-  {
-    id: 4,
-    word: 'cat',
-    phonetic: 'kæt',
-    meaning: '猫',
-    difficulty: 'easy',
-    category: '动物',
-  },
-  {
-    id: 5,
-    word: 'dog',
-    phonetic: 'dɒɡ',
-    meaning: '狗',
-    difficulty: 'easy',
-    category: '动物',
-  },
-  {
-    id: 6,
-    word: 'beautiful',
-    phonetic: 'ˈbjuːtɪfʊl',
-    meaning: '美丽的',
-    difficulty: 'medium',
-    category: '形容词',
-  },
-  {
-    id: 7,
-    word: 'computer',
-    phonetic: 'kəmˈpjuːtər',
-    meaning: '计算机',
-    difficulty: 'medium',
-    category: '科技',
-  },
-  {
-    id: 8,
-    word: 'pronunciation',
-    phonetic: 'prəˌnʌnsiˈeɪʃən',
-    meaning: '发音',
-    difficulty: 'hard',
-    category: '语言',
-  },
-];
+// 导入单词数据
+const { wordList } = require('../../utils/wordData');
 
-import { SpeechRecognitionService } from '../../utils/pronunciation';
-import {
-  analyzePhonemes,
-  analyzeDifficulty,
-  generatePronunciationTips,
-} from '../../utils/phonemeAnalyzer';
+const { SpeechRecognitionService } = require('../../utils/pronunciation');
 
 Page({
   data: {
+    // 基础数据
     wordList: [],
     selectedWordIndex: 0,
     currentWord: {},
-    phonemeInfo: [],
-    difficultyInfo: null,
-    pronunciationTips: [],
+    
+    // 学习步骤tabs
+    stepTabs: [
+      { key: 'learn', label: '学' },
+      { key: 'read', label: '读' },
+      { key: 'choose', label: '选' },
+      { key: 'split1', label: '拆', disabled: true },
+      { key: 'hyphen1', label: '一', disabled: true },
+      { key: 'spell', label: '拼' },
+      { key: 'hyphen2', label: '一', disabled: true },
+      { key: 'write', label: '写' }
+    ],
+    activeTab: 'learn',
+    
+    // 拼读功能
+    readingMode: 'phonics', // 'phonics' or 'syllable'
+    readingAnalysis: null,
+    phonemeList: [],
+    wordParts: [],
+    
+    // 录音功能
     isRecording: false,
     recognitionResult: '',
     accuracyScore: 0,
     feedback: '',
+    
+    // 示例口语
+    usageExample: ''
   },
 
   recorderManager: null,
 
-  onLoad() {
+  onLoad(options) {
     this.initWordList();
     this.initRecorderManager();
+    
+    // 如果传入了特定单词，直接选中
+    if (options && options.word) {
+      try {
+        const word = JSON.parse(decodeURIComponent(options.word));
+        const index = this.data.wordList.findIndex(item => item.id === word.id);
+        if (index >= 0) {
+          this.selectWord(index);
+        }
+      } catch (error) {
+        console.error('解析单词参数失败:', error);
+      }
+    }
   },
 
   initWordList() {
-    console.log('初始化单词列表:', wordList);
     this.setData({
-      wordList,
+      wordList
     });
-    console.log('设置后的单词列表:', this.data.wordList);
+    
+    // 默认选中第一个单词
+    if (wordList.length > 0) {
+      this.selectWord(0);
+    }
   },
 
   initRecorderManager() {
@@ -133,29 +101,47 @@ Page({
     });
   },
 
-  // 单词选择处理
-  onWordSelect(e) {
-    const index = e.detail.value;
+  // 单词chip选择
+  selectWordChip(e) {
+    const index = e.currentTarget.dataset.index;
+    this.selectWord(index);
+  },
+  
+  // 统一的单词选择方法
+  selectWord(index) {
     const word = this.data.wordList[index];
-
-    // 使用专业的音素分析工具
-    const phonemeInfo = analyzePhonemes(word.word, word.phonetic);
-    const difficultyInfo = analyzeDifficulty(phonemeInfo);
-    const pronunciationTips = generatePronunciationTips(
-      phonemeInfo,
-      difficultyInfo.level
-    );
-
+    if (!word) return;
+    
+    // 生成音素列表
+    const phonemeList = this.generatePhonemeList(word.phonetic);
+    
+    // 生成单词拆分（如果是复合词）
+    const wordParts = this.generateWordParts(word.word);
+    
+    // 生成示例口语
+    const usageExample = this.generateUsageExample(word);
+    
+    // 生成拼读分析
+    const readingAnalysis = this.generateReadingAnalysis(word, this.data.readingMode);
+    
     this.setData({
       selectedWordIndex: index,
       currentWord: word,
-      phonemeInfo: phonemeInfo,
-      difficultyInfo: difficultyInfo,
-      pronunciationTips: pronunciationTips,
+      phonemeList,
+      wordParts,
+      usageExample,
+      readingAnalysis,
+      // 清除之前的录音结果
       recognitionResult: '',
       accuracyScore: 0,
-      feedback: '',
+      feedback: ''
     });
+  },
+  
+  // picker选择处理（兼容旧版本）
+  onWordSelect(e) {
+    const index = e.detail.value;
+    this.selectWord(index);
   },
 
   toggleRecording() {
@@ -250,11 +236,164 @@ Page({
     }
   },
 
+  // 学习步骤Tab切换
+  switchTab(e) {
+    const key = e.currentTarget.dataset.key;
+    const tab = this.data.stepTabs.find(item => item.key === key);
+    if (tab && !tab.disabled) {
+      this.setData({
+        activeTab: key
+      });
+    }
+  },
+  
+  // 拼读模式切换
+  switchReadingMode(e) {
+    const mode = e.currentTarget.dataset.mode;
+    const readingAnalysis = this.generateReadingAnalysis(this.data.currentWord, mode);
+    
+    this.setData({
+      readingMode: mode,
+      readingAnalysis
+    });
+  },
+  
+  // 播放单词发音
+  playWordAudio() {
+    // 这里可以集成真实的音频播放功能
+    wx.showToast({
+      title: '播放发音: ' + this.data.currentWord.word,
+      icon: 'none',
+      duration: 1000
+    });
+  },
+  
+  // 显示详情
+  showDetail() {
+    wx.showToast({
+      title: '打开词汇详情',
+      icon: 'none'
+    });
+  },
+  
+  // 返回上一页
+  goBack() {
+    wx.navigateBack();
+  },
+  
+  // 重新测试
   retryTest() {
     this.setData({
       recognitionResult: '',
       accuracyScore: 0,
       feedback: '',
     });
+  },
+  
+  // 工具方法：生成音素列表
+  generatePhonemeList(phonetic) {
+    // 简单的音素拆分，实际中可以使用更复杂的算法
+    if (!phonetic) return [];
+    
+    // 移除音标符号并拆分
+    const cleanPhonetic = phonetic.replace(/[ˈˌː]/g, ' ').trim();
+    return cleanPhonetic.split(/\s+/).filter(p => p.length > 0).map(p => '/' + p + '/');
+  },
+  
+  // 工具方法：生成单词拆分
+  generateWordParts(word) {
+    // 检查是否为复合词
+    const compoundWords = {
+      'schoolbag': ['school', 'bag'],
+      'basketball': ['basket', 'ball'],
+      'classroom': ['class', 'room'],
+      'homework': ['home', 'work']
+    };
+    
+    return compoundWords[word.toLowerCase()] || [];
+  },
+  
+  // 工具方法：生成示例口语
+  generateUsageExample(word) {
+    const examples = {
+      'apple': 'I eat an <b>apple</b> every day.',
+      'hello': '<b>Hello</b>, nice to meet you!',
+      'book': 'Please read this <b>book</b> carefully.',
+      'cat': 'The <b>cat</b> is sleeping on the sofa.',
+      'dog': 'My <b>dog</b> loves to play in the park.',
+      'beautiful': 'She has a <b>beautiful</b> smile.',
+      'computer': 'I use my <b>computer</b> for work.',
+      'technology': '<b>Technology</b> changes our lives.',
+      'important': 'Education is very <b>important</b>.',
+      'different': 'We have <b>different</b> opinions.',
+      'pronunciation': 'Good <b>pronunciation</b> helps communication.',
+      'international': 'This is an <b>international</b> company.',
+      'communication': '<b>Communication</b> is the key to success.',
+      'responsibility': 'We all have <b>responsibility</b> for our future.',
+      'opportunity': 'This is a great <b>opportunity</b> to learn.'
+    };
+    
+    return examples[word.word.toLowerCase()] || `This is an example with <b>${word.word}</b>.`;
+  },
+  
+  // 工具方法：生成拼读分析
+  generateReadingAnalysis(word, mode) {
+    if (!word || !word.word) return null;
+    
+    if (mode === 'phonics') {
+      return this.generatePhonicsAnalysis(word);
+    } else {
+      return this.generateSyllableAnalysis(word);
+    }
+  },
+  
+  // 生成自然拼读分析
+  generatePhonicsAnalysis(word) {
+    const phonicsMap = {
+      'apple': [
+        { letters: 'a', sound: '/æ/' },
+        { letters: 'pp', sound: '/p/' },
+        { letters: 'le', sound: '/əl/' }
+      ],
+      'hello': [
+        { letters: 'h', sound: '/h/' },
+        { letters: 'e', sound: '/ə/' },
+        { letters: 'll', sound: '/l/' },
+        { letters: 'o', sound: '/əʊ/' }
+      ],
+      'book': [
+        { letters: 'b', sound: '/b/' },
+        { letters: 'oo', sound: '/ʊ/' },
+        { letters: 'k', sound: '/k/' }
+      ]
+    };
+    
+    const phonics = phonicsMap[word.word.toLowerCase()] || [
+      { letters: word.word, sound: '/' + word.phonetic + '/' }
+    ];
+    
+    return {
+      phonics,
+      tips: '自然拼读法将字母与发音对应，帮助您掌握发音规则。'
+    };
+  },
+  
+  // 生成音节拆分分析
+  generateSyllableAnalysis(word) {
+    const syllableMap = {
+      'apple': ['ap', 'ple'],
+      'hello': ['hel', 'lo'],
+      'book': ['book'],
+      'beautiful': ['beau', 'ti', 'ful'],
+      'computer': ['com', 'pu', 'ter'],
+      'pronunciation': ['pro', 'nun', 'ci', 'a', 'tion']
+    };
+    
+    const syllables = syllableMap[word.word.toLowerCase()] || [word.word];
+    
+    return {
+      syllables,
+      tips: '音节拆分帮助您更好地掌握单词的节奏和重音。'
+    };
   },
 });

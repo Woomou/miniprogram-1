@@ -1,395 +1,700 @@
-.container {
-  padding: 40rpx 30rpx;
-  background: #f5f7fa;
+// 基于参考设计系统的现代化拼读学习页面样式
+// Design System Variables
+$bg-base: #FFFFFF;
+$brand-50: #F2EAFE;
+$brand-400: #8B5CF6;
+$brand-500: #7C3AED;
+$brand-600: #6D28D9;
+$text-primary: #111827;
+$text-secondary: #6B7280;
+$text-muted: #9CA3AF;
+$text-inverse: #FFFFFF;
+$chip-bg: #F3F4F6;
+$chip-active: #E0E7FF;
+$accent-orange: #FF7A1A;
+$card-bg: #FFFFFF;
+$card-border: #E5E7EB;
+
+$radius-sm: 16rpx;    // 8px
+$radius-md: 24rpx;    // 12px
+$radius-lg: 32rpx;    // 16px
+$radius-xl: 48rpx;    // 24px
+
+$shadow-card: 0 12rpx 48rpx rgba(17, 24, 39, 0.06);
+
+$spacing-xs: 8rpx;    // 4px
+$spacing-sm: 16rpx;   // 8px
+$spacing-md: 24rpx;   // 12px
+$spacing-lg: 32rpx;   // 16px
+$spacing-xl: 48rpx;   // 24px
+$spacing-xxl: 64rpx;  // 32px
+
+// Main Container
+.app-container {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  background: $bg-base;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 40rpx;
+// App Bar
+.app-bar {
+  background: linear-gradient(135deg, $brand-50, $brand-400);
+  padding-top: env(safe-area-inset-top);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
-.title {
-  display: block;
-  font-size: 48rpx;
-  font-weight: bold;
-  color: #2c3e50;
-  margin-bottom: 15rpx;
-}
-
-.subtitle {
-  display: block;
-  font-size: 28rpx;
-  color: #7f8c8d;
-}
-
-/* 单词选择器样式 */
-.word-selector {
-  margin-bottom: 40rpx;
-}
-
-.selector-container {
-  background: #ffffff;
-  border-radius: 20rpx;
-  padding: 30rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
-}
-
-.picker-display {
+.app-bar-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 0;
-  border-bottom: 2rpx solid #ecf0f1;
+  height: 128rpx;
+  padding: 0 $spacing-xl;
 }
 
-.picker-text {
-  font-size: 32rpx;
-  color: #2c3e50;
-  font-weight: 500;
+.app-bar-left,
+.app-bar-right {
+  flex: 0 0 auto;
+  width: 80rpx;
 }
 
-.picker-arrow {
-  font-size: 24rpx;
-  color: #7f8c8d;
-}
-
-.debug-info {
-  margin-top: 20rpx;
-  padding: 10rpx;
-  background: #f8f9fa;
-  border-radius: 10rpx;
+.app-bar-title {
+  flex: 1;
   text-align: center;
 }
 
-.debug-info text {
-  font-size: 24rpx;
-  color: #7f8c8d;
+.icon-button {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10rpx);
+  
+  .icon {
+    font-size: 36rpx;
+    color: $text-inverse;
+    font-weight: 600;
+  }
 }
 
-/* 单词详情样式 */
-.word-detail {
-  animation: fadeIn 0.3s ease;
+.title-text {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: $text-inverse;
 }
 
-.word-info {
-  background: #ffffff;
-  border-radius: 20rpx;
-  padding: 40rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+// Main Scroll View
+.main-scroll {
+  flex: 1;
+  background: $bg-base;
+}
+
+// Section Base
+.section {
+  padding: 0 $spacing-xl;
+  margin-bottom: $spacing-xl;
+}
+
+// Word Chips Section
+.word-chips-section {
+  padding-top: $spacing-lg;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.word-chip {
+  position: relative;
+  background: $chip-bg;
+  border-radius: $radius-lg;
+  padding: $spacing-md $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  transition: all 0.2s ease;
+  
+  &.active {
+    background: $chip-active;
+    border: 2rpx solid $brand-400;
+  }
+  
+  .chip-text {
+    font-size: 28rpx;
+    color: $text-primary;
+    font-weight: 500;
+  }
+  
+  .chip-difficulty {
+    width: 12rpx;
+    height: 12rpx;
+    border-radius: 50%;
+    
+    &.difficulty-easy {
+      background: #10B981;
+    }
+    
+    &.difficulty-medium {
+      background: #F59E0B;
+    }
+    
+    &.difficulty-hard {
+      background: #EF4444;
+    }
+  }
+}
+
+// Step Tabs Section
+.tabs-section {
+  margin-top: $spacing-lg;
+}
+
+.step-tabs {
+  display: flex;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+  background: $chip-bg;
+  border-radius: $radius-lg;
+  overflow-x: auto;
+}
+
+.tab-item {
+  flex: 0 0 auto;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-sm;
+  background: transparent;
+  transition: all 0.2s ease;
+  
+  &.active {
+    background: $brand-400;
+    
+    .tab-label {
+      color: $text-inverse;
+    }
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  .tab-label {
+    font-size: 28rpx;
+    font-weight: 500;
+    color: $text-secondary;
+  }
+}
+
+// Main Word Card
+.main-word-card {
+  background: $card-bg;
+  border-radius: $radius-xl;
+  padding: $spacing-xxl;
+  box-shadow: $shadow-card;
+}
+
+.word-title-section {
   text-align: center;
+  margin-bottom: $spacing-lg;
 }
 
 .word-title {
+  font-size: 112rpx;
+  font-weight: 800;
+  color: $accent-orange;
+  letter-spacing: 1rpx;
   display: block;
-  font-size: 56rpx;
-  font-weight: bold;
-  color: #2c3e50;
-  margin-bottom: 20rpx;
 }
 
-.word-phonetic {
-  display: block;
-  font-size: 32rpx;
-  color: #7f8c8d;
-  margin-bottom: 15rpx;
+.compose-hints {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-sm;
+  margin-top: $spacing-md;
+}
+
+.hint-chip {
+  background: #FEF3C7;
+  border: 2rpx solid #F59E0B;
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  
+  .hint-text {
+    font-size: 24rpx;
+    color: #92400E;
+    font-weight: 500;
+  }
+}
+
+.ipa-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  margin-top: $spacing-lg;
+}
+
+.phonetic-text {
+  font-size: 36rpx;
+  color: $text-secondary;
+  font-family: 'Times New Roman', serif;
+}
+
+.play-button {
+  width: 64rpx;
+  height: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: $brand-50;
+  
+  .play-icon {
+    font-size: 32rpx;
+  }
+}
+
+.meaning-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  margin-top: $spacing-sm;
+}
+
+.word-type {
+  font-size: 28rpx;
+  color: $text-secondary;
+  font-style: italic;
 }
 
 .word-meaning {
-  display: block;
-  font-size: 28rpx;
-  color: #95a5a6;
-  margin-bottom: 30rpx;
-}
-
-/* 难度信息样式 */
-.difficulty-info {
-  margin-top: 30rpx;
-  padding-top: 30rpx;
-  border-top: 2rpx solid #ecf0f1;
-}
-
-.difficulty-title {
-  display: block;
-  font-size: 24rpx;
-  color: #7f8c8d;
-  margin-bottom: 15rpx;
-}
-
-.difficulty-badge {
-  display: inline-block;
-  padding: 10rpx 20rpx;
-  border-radius: 20rpx;
-  margin-bottom: 15rpx;
-}
-
-.difficulty-easy {
-  background: #d5f4e6;
-  color: #27ae60;
-}
-
-.difficulty-medium {
-  background: #fef9e7;
-  color: #f39c12;
-}
-
-.difficulty-hard {
-  background: #fadbd8;
-  color: #e74c3c;
-}
-
-.difficulty-text {
-  font-size: 24rpx;
+  font-size: 32rpx;
+  color: $text-primary;
   font-weight: 500;
 }
 
-/* 音素分析样式 */
-.phoneme-analysis {
-  margin-top: 30rpx;
-  padding-top: 30rpx;
-  border-top: 2rpx solid #ecf0f1;
+.detail-link {
+  font-size: 28rpx;
+  color: $brand-400;
+  text-decoration: underline;
 }
 
-.analysis-title {
-  display: block;
-  font-size: 24rpx;
-  color: #7f8c8d;
-  margin-bottom: 20rpx;
+// Phoneme Section
+.phoneme-section {
+  margin-top: $spacing-xl;
 }
 
-.phoneme-list {
+.phoneme-chips {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15rpx;
+  gap: $spacing-sm;
 }
 
-.phoneme-item {
-  background: #ecf0f1;
-  border-radius: 15rpx;
-  padding: 15rpx 20rpx;
+.phoneme-chip {
+  background: $chip-bg;
+  border-radius: $radius-sm;
+  padding: $spacing-sm $spacing-md;
+  
+  .phoneme-text {
+    font-size: 24rpx;
+    color: $text-primary;
+    font-weight: 500;
+    font-family: 'Times New Roman', serif;
+  }
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  gap: $spacing-lg;
+  margin-top: $spacing-xl;
+}
+
+.action-btn {
+  flex: 1;
+  padding: $spacing-lg;
+  border-radius: $radius-sm;
+  text-align: center;
+  transition: all 0.2s ease;
+  
+  &.outline {
+    background: transparent;
+    border: 2rpx solid $brand-400;
+    
+    .btn-text {
+      color: $brand-400;
+    }
+  }
+  
+  &.active {
+    background: $brand-400;
+    
+    .btn-text {
+      color: $text-inverse;
+    }
+  }
+  
+  .btn-text {
+    font-size: 28rpx;
+    font-weight: 500;
+  }
+}
+
+// Analysis Card
+.analysis-card {
+  background: $card-bg;
+  border: 2rpx solid $card-border;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-top: $spacing-xl;
+}
+
+.analysis-badge {
+  display: inline-block;
+  background: $brand-50;
+  color: $brand-600;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-md;
+  
+  .badge-text {
+    font-size: 24rpx;
+    font-weight: 600;
+  }
+}
+
+.analysis-content {
+  margin: $spacing-md 0;
+}
+
+// Phonics Breakdown
+.phonics-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  justify-content: center;
+}
+
+.phonics-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: $spacing-md;
+  background: $chip-bg;
+  border-radius: $radius-sm;
   min-width: 80rpx;
+  
+  .letter-part {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: $accent-orange;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .sound-part {
+    font-size: 24rpx;
+    color: $text-secondary;
+    font-family: 'Times New Roman', serif;
+  }
 }
 
-.phoneme-text {
-  font-size: 24rpx;
-  font-weight: bold;
-  color: #2c3e50;
-  margin-bottom: 5rpx;
-}
-
-.phoneme-type {
-  font-size: 20rpx;
-  color: #7f8c8d;
-}
-
-/* 发音建议样式 */
-.pronunciation-tips {
-  margin-top: 30rpx;
-  padding-top: 30rpx;
-  border-top: 2rpx solid #ecf0f1;
-}
-
-.tips-title {
-  display: block;
-  font-size: 24rpx;
-  color: #7f8c8d;
-  margin-bottom: 15rpx;
-}
-
-.tips-list {
+// Syllable Breakdown
+.syllable-breakdown {
   display: flex;
-  flex-direction: column;
-  gap: 8rpx;
+  gap: $spacing-md;
+  justify-content: center;
+  align-items: center;
 }
 
-.tip-item {
-  font-size: 22rpx;
-  color: #2c3e50;
-  line-height: 1.5;
-  padding: 10rpx 15rpx;
-  background: #f8f9fa;
-  border-radius: 10rpx;
-  border-left: 4rpx solid #3498db;
+.syllable-item {
+  padding: $spacing-md $spacing-lg;
+  background: $chip-active;
+  border-radius: $radius-sm;
+  border: 2rpx dashed $brand-400;
+  
+  .syllable-text {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: $brand-600;
+  }
 }
 
-/* 录音区域样式 */
+.analysis-tips {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background: $brand-50;
+  border-radius: $radius-sm;
+  border-left: 4rpx solid $brand-400;
+  
+  .tips-text {
+    font-size: 26rpx;
+    color: $text-secondary;
+    line-height: 1.5;
+  }
+}
+
+// Recording Card
+.recording-card {
+  background: $card-bg;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.recording-badge {
+  display: inline-block;
+  background: #DBEAFE;
+  color: #1D4ED8;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-lg;
+  
+  .badge-text {
+    font-size: 24rpx;
+    font-weight: 600;
+  }
+}
+
 .recording-section {
-  background: #ffffff;
-  border-radius: 20rpx;
-  padding: 40rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  text-align: center;
+  margin-bottom: $spacing-xl;
 }
 
 .microphone-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 30rpx;
 }
 
 .microphone-btn {
+  width: 200rpx;
+  height: 200rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40rpx;
-  border-radius: 50%;
-  background: #3498db;
-  color: #ffffff;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  min-width: 200rpx;
-  min-height: 200rpx;
   justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  box-shadow: 0 8rpx 32rpx rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+  
+  &.recording {
+    background: linear-gradient(135deg, #EF4444, #DC2626);
+    box-shadow: 0 8rpx 32rpx rgba(239, 68, 68, 0.3);
+    animation: pulse 1.5s infinite;
+  }
+  
+  .mic-text {
+    font-size: 48rpx;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .mic-label {
+    font-size: 24rpx;
+    color: $text-inverse;
+    font-weight: 500;
+  }
 }
 
-.microphone-btn.recording {
-  background: #e74c3c;
-  animation: pulse 1.5s infinite;
-}
-
-.mic-icon {
-  margin-bottom: 20rpx;
-}
-
-.icon-text {
-  font-size: 60rpx;
-}
-
-.mic-text {
-  font-size: 28rpx;
-  font-weight: 500;
-}
-
-/* 结果区域样式 */
-.result-section {
-  margin-top: 30rpx;
-  padding-top: 30rpx;
-  border-top: 2rpx solid #ecf0f1;
+// Result Analysis
+.result-analysis {
+  margin-top: $spacing-xl;
+  padding-top: $spacing-xl;
+  border-top: 2rpx solid $card-border;
 }
 
 .result-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #2c3e50;
-  margin-bottom: 20rpx;
   text-align: center;
+  margin-bottom: $spacing-lg;
+  
+  .title-text {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: $text-primary;
+  }
 }
 
-.comparison {
-  margin-bottom: 30rpx;
-}
-
-.original,
-.recognized {
+.word-comparison {
   display: flex;
   align-items: center;
-  margin-bottom: 15rpx;
-  padding: 20rpx;
-  background: #f8f9fa;
-  border-radius: 15rpx;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-lg;
+  background: #F9FAFB;
+  border-radius: $radius-lg;
 }
 
-.label {
-  font-size: 26rpx;
-  color: #7f8c8d;
-  margin-right: 20rpx;
-  min-width: 120rpx;
+.comparison-item {
+  flex: 1;
+  text-align: center;
+  
+  .item-label {
+    font-size: 24rpx;
+    color: $text-muted;
+    display: block;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .item-word {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: $text-primary;
+  }
+  
+  &.original .item-word {
+    color: $brand-400;
+  }
+  
+  &.recognized .item-word {
+    color: $accent-orange;
+  }
 }
 
-.text {
-  font-size: 28rpx;
-  color: #2c3e50;
-  font-weight: 500;
+.comparison-arrow {
+  .arrow-text {
+    font-size: 32rpx;
+    color: $text-muted;
+  }
 }
 
-.accuracy-section {
-  margin-bottom: 30rpx;
+.accuracy-display {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+}
+
+.accuracy-bar-container {
+  flex: 1;
 }
 
 .accuracy-bar {
-  width: 100%;
-  height: 20rpx;
-  background: #ecf0f1;
-  border-radius: 10rpx;
+  height: 16rpx;
+  background: #E5E7EB;
+  border-radius: 8rpx;
   overflow: hidden;
-  margin-bottom: 15rpx;
 }
 
 .accuracy-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e74c3c 0%, #f39c12 50%, #27ae60 100%);
-  border-radius: 10rpx;
-  transition: width 0.5s ease;
+  background: linear-gradient(90deg, #EF4444 0%, #F59E0B 50%, #10B981 100%);
+  border-radius: 8rpx;
+  transition: width 0.8s ease;
 }
 
-.accuracy-text {
-  font-size: 26rpx;
-  color: #7f8c8d;
-  text-align: center;
-  display: block;
+.accuracy-score {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: $text-primary;
+  min-width: 80rpx;
+  text-align: right;
 }
 
 .feedback-section {
-  background: #f8f9fa;
-  border-radius: 15rpx;
-  padding: 20rpx;
+  background: #FEF3C7;
+  border-radius: $radius-sm;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  border-left: 4rpx solid #F59E0B;
+  
+  .feedback-title {
+    font-size: 26rpx;
+    font-weight: 600;
+    color: #92400E;
+    display: block;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .feedback-content {
+    font-size: 28rpx;
+    color: #78350F;
+    line-height: 1.6;
+  }
 }
 
-.feedback-title {
-  font-size: 26rpx;
-  color: #7f8c8d;
-  margin-bottom: 10rpx;
-  display: block;
+.retry-section {
+  text-align: center;
 }
 
-.feedback-text {
-  font-size: 26rpx;
-  color: #2c3e50;
-  line-height: 1.5;
+.retry-btn {
+  display: inline-block;
+  background: $brand-400;
+  color: $text-inverse;
+  padding: $spacing-md $spacing-xl;
+  border-radius: $radius-sm;
+  transition: all 0.2s ease;
+  
+  .retry-text {
+    font-size: 28rpx;
+    font-weight: 500;
+  }
+  
+  &:active {
+    background: $brand-500;
+    transform: scale(0.98);
+  }
 }
 
-/* 操作按钮样式 */
-.action-buttons {
-  display: flex;
-  justify-content: center;
+// Usage Card
+.usage-card {
+  background: $card-bg;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
 }
 
-.btn {
-  padding: 25rpx 40rpx;
-  border-radius: 15rpx;
-  font-size: 28rpx;
-  font-weight: 500;
-  border: none;
-  transition: all 0.3s ease;
-  min-width: 200rpx;
+.usage-badge {
+  display: inline-block;
+  background: #ECFDF5;
+  color: #065F46;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-md;
+  
+  .badge-text {
+    font-size: 24rpx;
+    font-weight: 600;
+  }
 }
 
-.btn-primary {
-  background: #3498db;
-  color: #ffffff;
+.usage-content {
+  .usage-text {
+    font-size: 28rpx;
+    line-height: 1.6;
+    color: $text-primary;
+  }
 }
 
-.btn-primary:active {
-  background: #2980b9;
-}
-
-/* 空状态样式 */
+// Empty State
 .empty-state {
   text-align: center;
-  padding: 100rpx 0;
+  padding: 120rpx $spacing-xl;
+  
+  .empty-text {
+    font-size: 28rpx;
+    color: $text-muted;
+  }
 }
 
-.empty-text {
-  font-size: 28rpx;
-  color: #95a5a6;
+// Bottom Spacing
+.bottom-spacing {
+  height: 120rpx;
 }
 
-/* 动画效果 */
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -401,14 +706,17 @@
   }
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
+// Responsive Design
+@media screen and (max-width: 750rpx) {
+  .word-title {
+    font-size: 80rpx;
   }
-  50% {
-    transform: scale(1.05);
+  
+  .section {
+    padding: 0 $spacing-lg;
   }
-  100% {
-    transform: scale(1);
+  
+  .main-word-card {
+    padding: $spacing-lg;
   }
 }
