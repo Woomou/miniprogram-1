@@ -18,21 +18,23 @@
   <!-- 主滚动容器 -->
   <scroll-view class="main-scroll" scroll-y="true">
     
-    <!-- 单词选择 chips -->
+    <!-- 单词选择 chips (横向滑动) -->
     <view class="section word-chips-section">
-      <view class="chip-row">
-        <view 
-          class="word-chip {{selectedWordIndex === index ? 'active' : ''}}" 
-          wx:for="{{wordList}}" 
-          wx:key="id"
-          wx:for-index="index"
-          data-index="{{index}}"
-          bindtap="selectWordChip"
-        >
-          <text class="chip-text">{{item.word}}</text>
-          <view class="chip-difficulty difficulty-{{item.difficulty}}"></view>
+      <scroll-view class="word-chips-scroll" scroll-x="true" show-scrollbar="false">
+        <view class="chip-row">
+          <view 
+            class="word-chip {{selectedWordIndex === index ? 'active' : ''}}" 
+            wx:for="{{wordList}}" 
+            wx:key="id"
+            wx:for-index="index"
+            data-index="{{index}}"
+            bindtap="selectWordChip"
+          >
+            <text class="chip-text">{{item.word}}</text>
+            <view class="chip-difficulty difficulty-{{item.difficulty}}"></view>
+          </view>
         </view>
-      </view>
+      </scroll-view>
     </view>
 
     <!-- 学习步骤 Tabs -->
@@ -110,6 +112,34 @@
       </view>
     </view>
 
+    <!-- 词根助记卡片 -->
+    <view class="section" wx:if="{{currentWord.word && wordParts.length > 0}}">
+      <view class="mnemonic-card">
+        <view class="mnemonic-badge">
+          <text class="badge-text">词根助记</text>
+        </view>
+        
+        <view class="mnemonic-content">
+          <view class="word-equation">
+            <view class="equation-item" wx:for="{{wordParts}}" wx:key="*this">
+              <view class="root-token">
+                <text class="root-text">{{item}}</text>
+                <text class="root-meaning">{{mnemonicMeanings[item] || ''}}</text>
+              </view>
+              <text class="equation-operator" wx:if="{{index < wordParts.length - 1}}">+</text>
+            </view>
+            <text class="equation-operator">=</text>
+            <view class="result-token">
+              <text class="result-text">{{currentWord.word}}</text>
+            </view>
+          </view>
+          <view class="mnemonic-explanation">
+            <text class="explanation-text">{{mnemonicExplanation}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <!-- 拼读分析卡片 -->
     <view class="section" wx:if="{{currentWord.word && readingAnalysis}}">
       <view class="analysis-card">
@@ -121,9 +151,18 @@
           <!-- 自然拼读模式 -->
           <view wx:if="{{readingMode === 'phonics'}}">
             <view class="phonics-breakdown">
-              <view class="phonics-item" wx:for="{{readingAnalysis.phonics}}" wx:key="*this">
+              <view 
+                class="phonics-item interactive" 
+                wx:for="{{readingAnalysis.phonics}}" 
+                wx:key="*this"
+                wx:for-index="index"
+                data-syllable="{{item.letters}}"
+                data-index="{{index}}"
+                bindtap="recordSyllable"
+              >
                 <text class="letter-part">{{item.letters}}</text>
                 <text class="sound-part">{{item.sound}}</text>
+                <view class="record-indicator" wx:if="{{recordingSyllableIndex === index}}">🎤</view>
               </view>
             </view>
           </view>
@@ -131,8 +170,17 @@
           <!-- 音节拆分模式 -->
           <view wx:if="{{readingMode === 'syllable'}}">
             <view class="syllable-breakdown">
-              <view class="syllable-item" wx:for="{{readingAnalysis.syllables}}" wx:key="*this">
+              <view 
+                class="syllable-item interactive" 
+                wx:for="{{readingAnalysis.syllables}}" 
+                wx:key="*this"
+                wx:for-index="index"
+                data-syllable="{{item}}"
+                data-index="{{index}}"
+                bindtap="recordSyllable"
+              >
                 <text class="syllable-text">{{item}}</text>
+                <view class="record-indicator" wx:if="{{recordingSyllableIndex === index}}">🎤</view>
               </view>
             </view>
           </view>

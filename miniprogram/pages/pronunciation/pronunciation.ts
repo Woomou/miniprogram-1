@@ -44,11 +44,19 @@ Page({
     phonemeList: [] as string[],
     wordParts: [] as string[],
     
+    // 词根助记
+    mnemonicMeanings: {} as Record<string, string>,
+    mnemonicExplanation: '',
+    
     // 录音功能
     isRecording: false,
     recognitionResult: '',
     accuracyScore: 0,
     feedback: '',
+    
+    // 音节录音功能
+    recordingSyllableIndex: -1,
+    syllableRecognitionResults: {} as Record<number, any>,
     
     // 示例口语
     usageExample: ''
@@ -109,6 +117,9 @@ Page({
     // 生成拼读分析
     const readingAnalysis = this.generateReadingAnalysis(word, this.data.readingMode);
     
+    // 生成词根助记
+    const { mnemonicMeanings, mnemonicExplanation } = this.generateMnemonicData(word, wordParts);
+    
     this.setData({
       selectedWordIndex: index,
       currentWord: word,
@@ -116,10 +127,14 @@ Page({
       wordParts,
       usageExample,
       readingAnalysis,
+      mnemonicMeanings,
+      mnemonicExplanation,
       // 清除之前的录音结果
       recognitionResult: '',
       accuracyScore: 0,
-      feedback: ''
+      feedback: '',
+      recordingSyllableIndex: -1,
+      syllableRecognitionResults: {}
     });
   },
   
@@ -293,7 +308,124 @@ Page({
       recognitionResult: '',
       accuracyScore: 0,
       feedback: '',
+      recordingSyllableIndex: -1,
+      syllableRecognitionResults: {}
     });
+  },
+  
+  // 音节录音功能
+  async recordSyllable(e: any) {
+    const syllable = e.currentTarget.dataset.syllable;
+    const index = parseInt(e.currentTarget.dataset.index);
+    
+    if (this.data.recordingSyllableIndex === index) {
+      // 停止当前录音
+      this.stopSyllableRecording();
+    } else {
+      // 开始新的音节录音
+      this.startSyllableRecording(syllable, index);
+    }
+  },
+  
+  async startSyllableRecording(syllable: string, index: number) {
+    this.setData({
+      recordingSyllableIndex: index
+    });
+    
+    // 检查录音权限
+    wx.getSetting({
+      success: (res) => {
+        if (!res.authSetting['scope.record']) {
+          wx.authorize({
+            scope: 'scope.record',
+            success: () => {
+              this.doStartSyllableRecording(syllable, index);
+            },
+            fail: () => {
+              wx.showModal({
+                title: '需要录音权限',
+                content: '请在设置中开启录音权限',
+                showCancel: false,
+              });
+              this.setData({ recordingSyllableIndex: -1 });
+            },
+          });
+        } else {
+          this.doStartSyllableRecording(syllable, index);
+        }
+      },
+    });
+  },
+  
+  doStartSyllableRecording(syllable: string, index: number) {
+    const options = {
+      duration: 5000, // 音节录音时间较短，5秒
+      sampleRate: 16000,
+      numberOfChannels: 1,
+      encodeBitRate: 96000,
+      format: 'mp3' as const,
+    };
+
+    this.recorderManager.onStop = (res: any) => {
+      this.processSyllableAudio(res.tempFilePath, syllable, index);
+    };
+
+    this.recorderManager.start(options);
+    
+    // 自动停止录音
+    setTimeout(() => {
+      if (this.data.recordingSyllableIndex === index) {
+        this.stopSyllableRecording();
+      }
+    }, 3000);
+  },
+  
+  stopSyllableRecording() {
+    this.recorderManager.stop();
+    this.setData({
+      recordingSyllableIndex: -1
+    });
+  },
+  
+  async processSyllableAudio(tempFilePath: string, targetSyllable: string, index: number) {
+    wx.showLoading({
+      title: '识别中...',
+    });
+
+    try {
+      // 使用语音识别服务识别音节
+      const result = await SpeechRecognitionService.recognizeSpeech(
+        tempFilePath,
+        targetSyllable
+      );
+
+      // 更新音节识别结果
+      const syllableResults = { ...this.data.syllableRecognitionResults };
+      syllableResults[index] = {
+        target: targetSyllable,
+        recognized: result.text,
+        accuracy: result.accuracy
+      };
+      
+      this.setData({
+        syllableRecognitionResults: syllableResults
+      });
+
+      // 显示结果
+      wx.showToast({
+        title: `${targetSyllable}: ${result.accuracy}%`,
+        icon: 'none',
+        duration: 2000,
+      });
+    } catch (error) {
+      console.error('音节识别失败:', error);
+      wx.showToast({
+        title: '识别失败，请重试',
+        icon: 'error',
+      });
+    } finally {
+      wx.hideLoading();
+    }
   },
   
   // 工具方法
@@ -392,6 +524,61 @@ Page({
     return {
       syllables,
       tips: '音节拆分帮助您更好地掌握单词的节奏和重音。'
+    };
+  },
+  
+  // 生成词根助记数据
+  generateMnemonicData(word: Word, wordParts: string[]): { mnemonicMeanings: Record<string, string>, mnemonicExplanation: string } {
+    if (!wordParts || wordParts.length === 0) {
+      return {
+        mnemonicMeanings: {},
+        mnemonicExplanation: ''
+      };
+    }
+    
+    // 词根含义映射
+    const rootMeanings: Record<string, string> = {
+      'school': '学校',
+      'bag': '包',
+      'basket': '篮子',
+      'ball': '球',
+      'class': '班级',
+      'room': '房间',
+      'home': '家',
+      'work': '工作',
+      'play': '玩',
+      'ground': '地面',
+      'water': '水',
+      'bottle': '瓶子',
+      'sun': '太阳',
+      'light': '光',
+      'fire': '火',
+      'place': '地方',
+      'birth': '出生',
+      'day': '天'
+    };
+    
+    // 构建助记解释
+    const explanations: Record<string, string> = {
+      'schoolbag': '去学校要背的包，即书包',
+      'basketball': '在篮子里投球的运动',
+      'classroom': '班级上课的房间',
+      'homework': '在家里要做的工作',
+      'playground': '可以玩耶的地面场所',
+      'waterbottle': '装水的瓶子',
+      'sunlight': '太阳发出的光',
+      'fireplace': '生火取暖的地方',
+      'birthday': '出生的那一天'
+    };
+    
+    const mnemonicMeanings: Record<string, string> = {};
+    wordParts.forEach(part => {
+      mnemonicMeanings[part] = rootMeanings[part.toLowerCase()] || '';
+    });
+    
+    return {
+      mnemonicMeanings,
+      mnemonicExplanation: explanations[word.word.toLowerCase()] || `${word.word} 是由 ${wordParts.join(' + ')} 组成的复合词`
     };
   },
 });

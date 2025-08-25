@@ -97,15 +97,28 @@ $spacing-xxl: 64rpx;  // 32px
   margin-bottom: $spacing-xl;
 }
 
-// Word Chips Section
+// Word Chips Section (横向滑动)
 .word-chips-section {
   padding-top: $spacing-lg;
 }
 
+.word-chips-scroll {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  
+  // 隐藏滚动条样式
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .chip-row {
-  display: flex;
-  flex-wrap: wrap;
+  display: inline-flex;
   gap: $spacing-sm;
+  padding: 0 $spacing-sm;
+  min-width: 100%;
 }
 
 .word-chip {
@@ -117,10 +130,14 @@ $spacing-xxl: 64rpx;  // 32px
   align-items: center;
   gap: $spacing-sm;
   transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
   
   &.active {
     background: $chip-active;
     border: 2rpx solid $brand-400;
+    transform: scale(1.05);
+    box-shadow: 0 4rpx 16rpx rgba(139, 92, 246, 0.2);
   }
   
   .chip-text {
@@ -346,6 +363,101 @@ $spacing-xxl: 64rpx;  // 32px
   }
 }
 
+// Mnemonic Card (词根助记)
+.mnemonic-card {
+  background: $card-bg;
+  border: 2rpx solid #ECFDF5;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-top: $spacing-xl;
+}
+
+.mnemonic-badge {
+  display: inline-block;
+  background: #ECFDF5;
+  color: #065F46;
+  padding: $spacing-sm $spacing-md;
+  border-radius: $radius-sm;
+  margin-bottom: $spacing-md;
+  
+  .badge-text {
+    font-size: 24rpx;
+    font-weight: 600;
+  }
+}
+
+.mnemonic-content {
+  margin: $spacing-md 0;
+}
+
+.word-equation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+  margin-bottom: $spacing-lg;
+}
+
+.equation-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.root-token {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-md;
+  background: #DBEAFE;
+  border-radius: $radius-sm;
+  border: 2rpx solid #3B82F6;
+  
+  .root-text {
+    font-size: 28rpx;
+    font-weight: 600;
+    color: #1D4ED8;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .root-meaning {
+    font-size: 22rpx;
+    color: #3730A3;
+  }
+}
+
+.result-token {
+  padding: $spacing-md $spacing-lg;
+  background: linear-gradient(135deg, #10B981, #059669);
+  border-radius: $radius-sm;
+  
+  .result-text {
+    font-size: 32rpx;
+    font-weight: 700;
+    color: $text-inverse;
+  }
+}
+
+.equation-operator {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: $text-muted;
+}
+
+.mnemonic-explanation {
+  text-align: center;
+  padding: $spacing-md;
+  background: #F0FDF4;
+  border-radius: $radius-sm;
+  
+  .explanation-text {
+    font-size: 26rpx;
+    color: #166534;
+    line-height: 1.5;
+  }
+}
+
 // Analysis Card
 .analysis-card {
   background: $card-bg;
@@ -382,6 +494,7 @@ $spacing-xxl: 64rpx;  // 32px
 }
 
 .phonics-item {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -389,6 +502,24 @@ $spacing-xxl: 64rpx;  // 32px
   background: $chip-bg;
   border-radius: $radius-sm;
   min-width: 80rpx;
+  transition: all 0.2s ease;
+  
+  &.interactive {
+    cursor: pointer;
+    border: 2rpx solid transparent;
+    
+    &:hover {
+      background: $chip-active;
+      transform: translateY(-2rpx);
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+      background: #FEF3C7;
+      border-color: #F59E0B;
+    }
+  }
   
   .letter-part {
     font-size: 32rpx;
@@ -402,6 +533,21 @@ $spacing-xxl: 64rpx;  // 32px
     color: $text-secondary;
     font-family: 'Times New Roman', serif;
   }
+  
+  .record-indicator {
+    position: absolute;
+    top: -8rpx;
+    right: -8rpx;
+    width: 32rpx;
+    height: 32rpx;
+    background: #EF4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16rpx;
+    animation: pulse 1.5s infinite;
+  }
 }
 
 // Syllable Breakdown
@@ -410,18 +556,53 @@ $spacing-xxl: 64rpx;  // 32px
   gap: $spacing-md;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .syllable-item {
+  position: relative;
   padding: $spacing-md $spacing-lg;
   background: $chip-active;
   border-radius: $radius-sm;
   border: 2rpx dashed $brand-400;
+  transition: all 0.2s ease;
+  
+  &.interactive {
+    cursor: pointer;
+    
+    &:hover {
+      background: #DBEAFE;
+      border-color: #3B82F6;
+      transform: translateY(-2rpx);
+      box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.2);
+    }
+    
+    &:active {
+      transform: scale(0.95);
+      background: #FEF3C7;
+      border-color: #F59E0B;
+    }
+  }
   
   .syllable-text {
     font-size: 32rpx;
     font-weight: 600;
     color: $brand-600;
+  }
+  
+  .record-indicator {
+    position: absolute;
+    top: -8rpx;
+    right: -8rpx;
+    width: 32rpx;
+    height: 32rpx;
+    background: #EF4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16rpx;
+    animation: pulse 1.5s infinite;
   }
 }
 
