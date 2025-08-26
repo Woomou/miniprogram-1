@@ -6,7 +6,21 @@
       "Bash(npm run typecheck:*)",
       "Bash(npm run lint)",
       "Bash(rm:*)",
-      "Bash(npm run prettier:*)"
+      "Bash(npm run prettier:*)",
+      "Bash(node:*)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" --help)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" preview --help)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" build-npm --help)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" islogin)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" build-npm --project /Users/harryneo/WeChatProjects/miniprogram-1)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" preview --project /Users/harryneo/WeChatProjects/miniprogram-1 --qr-format terminal)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" open --project /Users/harryneo/WeChatProjects/miniprogram-1)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" close --project /Users/harryneo/WeChatProjects/miniprogram-1)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" open --project /Users/harryneo/WeChatProjects/miniprogram-1 --debug)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" preview --project /Users/harryneo/WeChatProjects/miniprogram-1 --debug --qr-format terminal)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" cache --project /Users/harryneo/WeChatProjects/miniprogram-1)",
+      "Bash(\"/Applications/wechatwebdevtools.app/Contents/MacOS/cli\" cache --project /Users/harryneo/WeChatProjects/miniprogram-1 --clean compile)",
+      "Bash(touch:*)"
     ],
     "deny": []
   }
