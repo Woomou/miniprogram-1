@@ -15,6 +15,7 @@ $accent-orange: #FF7A1A;
 $card-bg: #FFFFFF;
 $card-border: #E5E7EB;
 
+$radius-xs: 8rpx;     // 4px
 $radius-sm: 16rpx;    // 8px
 $radius-md: 24rpx;    // 12px
 $radius-lg: 32rpx;    // 16px
@@ -975,6 +976,216 @@ $spacing-xxl: 64rpx;  // 32px
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// Enhanced Analysis Styles for Different Modes
+.section-title {
+  margin-bottom: $spacing-md;
+  
+  .title-text {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: $text-primary;
+    margin-right: $spacing-sm;
+  }
+  
+  .subtitle-text {
+    font-size: 24rpx;
+    color: $text-secondary;
+    margin-left: $spacing-sm;
+  }
+}
+
+// Phonics Mode Specific Styles
+.phonics-breakdown {
+  .phonics-item {
+    background: #FEF7FF;
+    border: 2rpx solid #E879F9;
+    padding: $spacing-md;
+    margin-bottom: $spacing-sm;
+    border-radius: $radius-md;
+    
+    .phonics-content {
+      display: flex;
+      align-items: center;
+      margin-bottom: $spacing-xs;
+      
+      .letter-part {
+        font-size: 32rpx;
+        font-weight: 600;
+        color: #7C2D92;
+        background: #F3E8FF;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $radius-sm;
+      }
+      
+      .arrow {
+        margin: 0 $spacing-sm;
+        font-size: 24rpx;
+        color: $text-secondary;
+      }
+      
+      .sound-part {
+        font-size: 28rpx;
+        color: #C026D3;
+        font-family: 'Courier New', monospace;
+      }
+    }
+    
+    .phonics-description {
+      .desc-text {
+        font-size: 22rpx;
+        color: $text-muted;
+        font-style: italic;
+      }
+    }
+  }
+}
+
+.syllable-blocks {
+  margin-top: $spacing-lg;
+  
+  .blocks-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    
+    .syllable-block {
+      background: #FFF7ED;
+      border: 2rpx solid #FB923C;
+      padding: $spacing-md;
+      border-radius: $radius-md;
+      flex: 1;
+      min-width: 120rpx;
+      text-align: center;
+      
+      .block-letters {
+        display: block;
+        font-size: 28rpx;
+        font-weight: 600;
+        color: #EA580C;
+        margin-bottom: $spacing-xs;
+      }
+      
+      .block-ipa {
+        display: block;
+        font-size: 24rpx;
+        color: #F97316;
+        font-family: 'Courier New', monospace;
+      }
+      
+      .stress-indicator {
+        position: absolute;
+        top: -8rpx;
+        right: 8rpx;
+        font-size: 20rpx;
+        color: #DC2626;
+      }
+      
+      &.stress-1 {
+        border-color: #DC2626;
+        background: #FEF2F2;
+      }
+      
+      &.stress-2 {
+        border-color: #F59E0B;
+        background: #FFFBEB;
+      }
+    }
+  }
+}
+
+// Syllable Mode Specific Styles
+.syllable-breakdown {
+  .breakdown-header {
+    margin-bottom: $spacing-md;
+    
+    .header-text {
+      font-size: 28rpx;
+      font-weight: 500;
+      color: $brand-600;
+    }
+  }
+  
+  .syllable-item {
+    &.arpa {
+      background: #EFF6FF;
+      border: 2rpx solid #3B82F6;
+      color: #1D4ED8;
+    }
+    
+    &.ipa {
+      background: #F0FDF4;
+      border: 2rpx solid #10B981;
+      color: #047857;
+      
+      .ipa-text {
+        font-family: 'Courier New', monospace;
+      }
+    }
+    
+    padding: $spacing-md;
+    margin-bottom: $spacing-sm;
+    border-radius: $radius-md;
+    text-align: center;
+    
+    .syllable-text {
+      font-size: 32rpx;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+  }
+}
+
+.stress-breakdown {
+  margin-top: $spacing-lg;
+  
+  .stress-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-xs;
+    
+    .stress-syllable {
+      display: flex;
+      align-items: center;
+      background: #FEFCE8;
+      border: 2rpx solid #EAB308;
+      padding: $spacing-sm;
+      border-radius: $radius-sm;
+      margin-bottom: $spacing-xs;
+      
+      .stress-phoneme {
+        position: relative;
+        margin-right: $spacing-xs;
+        
+        .phoneme-text {
+          font-size: 24rpx;
+          color: $text-primary;
+        }
+        
+        .stress-mark {
+          position: absolute;
+          top: -12rpx;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 20rpx;
+          color: #DC2626;
+        }
+        
+        &.level-1 {
+          background: #FEE2E2;
+          border-radius: $radius-xs;
+          padding: 4rpx;
+        }
+        
+        &.level-2 {
+          background: #FEF3C7;
+          border-radius: $radius-xs;
+          padding: 4rpx;
+        }
+      }
+    }
   }
 }
 

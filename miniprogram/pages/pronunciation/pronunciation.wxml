@@ -189,7 +189,8 @@
           <!-- 自然拼读模式 -->
           <view wx:if="{{readingMode === 'phonics'}}">
             <view class="section-title">
-              <text class="title-text">自然拼读分析</text>
+              <text class="title-text">🔤 自然拼读分析</text>
+              <text class="subtitle-text">字母与发音的对应关系</text>
             </view>
             <view class="phonics-breakdown">
               <view 
@@ -201,9 +202,34 @@
                 data-index="{{index}}"
                 bindtap="recordSyllable"
               >
-                <text class="letter-part">{{item.letters}}</text>
-                <text class="sound-part">{{item.sound}}</text>
+                <view class="phonics-content">
+                  <text class="letter-part">{{item.letters}}</text>
+                  <text class="arrow">→</text>
+                  <text class="sound-part">{{item.sound}}</text>
+                </view>
+                <view class="phonics-description" wx:if="{{item.description}}">
+                  <text class="desc-text">{{item.description}}</text>
+                </view>
                 <view class="record-indicator" wx:if="{{recordingSyllableIndex === index}}">🎤</view>
+              </view>
+            </view>
+            
+            <!-- 音节块显示（如果有的话） -->
+            <view class="syllable-blocks" wx:if="{{readingAnalysis.syllableBlocks}}">
+              <view class="section-title">
+                <text class="title-text">🎵 音节结构</text>
+                <text class="subtitle-text">重音和节奏</text>
+              </view>
+              <view class="blocks-container">
+                <view 
+                  class="syllable-block stress-{{item.stress}}"
+                  wx:for="{{readingAnalysis.syllableBlocks}}" 
+                  wx:key="letters_span"
+                >
+                  <text class="block-letters">{{item.letters_span}}</text>
+                  <text class="block-ipa">{{item.ipa}}</text>
+                  <text class="stress-indicator" wx:if="{{item.stress > 0}}">{{item.stress === 1 ? 'ˈ' : 'ˌ'}}</text>
+                </view>
               </view>
             </view>
           </view>
@@ -211,11 +237,17 @@
           <!-- 音节拆分模式 -->
           <view wx:if="{{readingMode === 'syllable'}}">
             <view class="section-title">
-              <text class="title-text">音节拆分分析</text>
+              <text class="title-text">🎵 音节拆分分析</text>
+              <text class="subtitle-text">单词的节拍和韵律</text>
             </view>
+            
+            <!-- ARPA音节显示 -->
             <view class="syllable-breakdown">
+              <view class="breakdown-header">
+                <text class="header-text">ARPA音节</text>
+              </view>
               <view 
-                class="syllable-item interactive" 
+                class="syllable-item arpa interactive" 
                 wx:for="{{readingAnalysis.syllables}}" 
                 wx:key="index"
                 wx:for-index="index"
@@ -225,6 +257,45 @@
               >
                 <text class="syllable-text">{{item}}</text>
                 <view class="record-indicator" wx:if="{{recordingSyllableIndex === index}}">🎤</view>
+              </view>
+            </view>
+            
+            <!-- IPA音节显示 -->
+            <view class="ipa-breakdown" wx:if="{{readingAnalysis.ipa}}">
+              <view class="breakdown-header">
+                <text class="header-text">IPA音节</text>
+              </view>
+              <view 
+                class="syllable-item ipa" 
+                wx:for="{{readingAnalysis.ipa}}" 
+                wx:key="index"
+              >
+                <text class="ipa-text">{{item}}</text>
+              </view>
+            </view>
+            
+            <!-- 重音模式显示 -->
+            <view class="stress-breakdown" wx:if="{{readingAnalysis.stressedSyllables}}">
+              <view class="breakdown-header">
+                <text class="header-text">重音标记</text>
+              </view>
+              <view class="stress-container">
+                <view 
+                  class="stress-syllable"
+                  wx:for="{{readingAnalysis.stressedSyllables}}" 
+                  wx:key="index"
+                >
+                  <view 
+                    class="stress-phoneme level-{{phoneme.level}}"
+                    wx:for="{{item}}"
+                    wx:for-item="phoneme"
+                    wx:key="sub"
+                  >
+                    <text class="phoneme-text">{{phoneme.sub}}</text>
+                    <text class="stress-mark" wx:if="{{phoneme.level === 1}}">ˈ</text>
+                    <text class="stress-mark" wx:if="{{phoneme.level === 2}}">ˌ</text>
+                  </view>
+                </view>
               </view>
             </view>
           </view>

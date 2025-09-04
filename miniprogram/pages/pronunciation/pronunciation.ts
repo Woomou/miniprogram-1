@@ -2,6 +2,20 @@ import { SpeechRecognitionService } from '../../utils/pronunciation';
 import { Word, wordList } from '../../utils/wordData';
 import { phonicsAPI } from '../../utils/phonicsAPI';
 
+interface SyllableStressedItem {
+  level: number | null;
+  sub: string;
+}
+
+interface SyllableBlock {
+  arpa: string;
+  ipa: string;
+  letters_range: number[];
+  letters_span: string;
+  stress: number;
+  token_range: number[];
+}
+
 interface StepTab {
   key: string;
   label: string;
@@ -16,6 +30,9 @@ interface PhonicsItem {
 interface ReadingAnalysis {
   phonics?: PhonicsItem[];
   syllables?: string[];
+  ipa?: string[];
+  stressedSyllables?: SyllableStressedItem[][];
+  syllableBlocks?: SyllableBlock[];
   tips: string;
   count?: number;
 }
@@ -596,7 +613,6 @@ Page({
   
   async generatePhonicsAnalysis(word: Word): Promise<ReadingAnalysis> {
     try {
-      // 使用API获取音素拆分
       const response = await phonicsAPI.getPhonemes(word.word);
       
       if (response.data.phonemes && response.data.phonemes.length > 0) {
@@ -609,7 +625,8 @@ Page({
         
         return {
           phonics,
-          tips: '自然拼读法将字母与发音对应，帮助您掌握发音规则。'
+          syllableBlocks: response.data.syllableBlocks || [],
+          tips: '自然拼读法：字母组合如何发音，帮助您掌握拼读规则和发音模式。'
         };
       }
       
@@ -622,15 +639,13 @@ Page({
   
   async generateSyllableAnalysis(word: Word): Promise<ReadingAnalysis> {
     try {
-      // 使用API获取音节拆分
       const response = await phonicsAPI.getSyllables(word.word);
       
-      // 优先使用Pyphen算法的结果，回退到基础算法
-      const syllables = response.data.syllables || [word.word];
-      
       return {
-        syllables,
-        tips: '音节拆分帮助您更好地掌握单词的节奏和重音。',
+        syllables: response.data.syllables || [word.word],
+        ipa: response.data.ipa || [],
+        stressedSyllables: response.data.stressedSyllables || [],
+        tips: '音节拆分：将单词分解为发音单位，掌握节拍韵律和重音位置。',
         count: response.data.syllables?.length || 1
       };
     } catch (error) {
