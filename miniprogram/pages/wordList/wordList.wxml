@@ -23,7 +23,32 @@
           {{item.difficulty}}
         </view>
       </view>
-      <view class="arrow">></view>
+      <view class="actions">
+        <button class="hw-btn" catchtap="togglePad" data-id="{{item.id}}" size="mini">手写</button>
+        <view class="arrow">></view>
+      </view>
+    </view>
+    
+    <!-- 手写板面板：与该词条绑定 -->
+    <view wx:if="{{showPadMap[item.id]}}" class="hw-panel">
+      <view class="hw-header">
+        <text>手写识别（{{item.word}}）</text>
+        <button class="clear-btn" size="mini" catchtap="clearPad" data-id="{{item.id}}">清空</button>
+      </view>
+      <canvas
+        class="hw-canvas"
+        canvas-id="canvas-{{item.id}}"
+        disable-scroll="true"
+        bindtouchstart="onCanvasTouchStart"
+        bindtouchmove="onCanvasTouchMove"
+        bindtouchend="onCanvasTouchEnd"
+        bindtouchcancel="onCanvasTouchEnd"
+        data-id="{{item.id}}"
+        style="width: 680rpx; height: 360rpx;"
+      ></canvas>
+      <view class="result">
+        <text>识别结果：{{recognizeResultMap[item.id] || '…'}}</text>
+      </view>
     </view>
   </scroll-view>
 </view>

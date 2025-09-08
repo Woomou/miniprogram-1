@@ -5,6 +5,10 @@
   min-height: 100vh;
 }
 
+.scrollarea {
+  height: 100vh;
+}
+
 .welcome-section {
   text-align: center;
   margin-bottom: 80rpx;
@@ -91,4 +95,93 @@
 .tip {
   font-size: 26rpx;
   color: rgba(255, 255, 255, 0.7);
+}
+
+/* 首页单词手写识别样式 */
+.words-section {
+  margin-top: 40rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 20rpx;
+}
+
+.home-word-item {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 18rpx rgba(0,0,0,0.08);
+}
+
+.home-word-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.home-word-info {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+}
+
+.home-word {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.home-phonetic {
+  font-size: 26rpx;
+  color: #7f8c8d;
+  background: #f8f9fa;
+  padding: 4rpx 10rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid #e9ecef;
+}
+
+.hw-btn {
+  background: #667eea;
+  color: #fff;
+  border: none;
+}
+
+.hw-panel {
+  margin-top: 8rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  border: 1rpx solid #f0f0f0;
+}
+
+.hw-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.clear-btn {
+  background: #ff7675;
+  color: #fff;
+  border: none;
+}
+
+.hw-canvas {
+  width: 680rpx;
+  height: 360rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 1rpx dashed #dfe6e9;
+}
+
+.result {
+  margin-top: 12rpx;
+  color: #2d3436;
 }

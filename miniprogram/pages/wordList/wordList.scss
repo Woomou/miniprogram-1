@@ -45,6 +45,18 @@
   }
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.hw-btn {
+  background: #667eea;
+  color: #fff;
+  border: none;
+}
+
 .word-content {
   flex: 1;
   display: flex;
@@ -132,6 +144,42 @@
 
 .word-item:hover .arrow {
   color: #667eea;
+}
+
+/* 手写板样式 */
+.hw-panel {
+  margin: 0 20rpx 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  border: 1rpx solid #f0f0f0;
+}
+
+.hw-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.clear-btn {
+  background: #ff7675;
+  color: #fff;
+  border: none;
+}
+
+.hw-canvas {
+  width: 680rpx;
+  height: 360rpx;
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  border: 1rpx dashed #dfe6e9;
+}
+
+.result {
+  margin-top: 12rpx;
+  color: #2d3436;
 }
 
 /* 空状态 */

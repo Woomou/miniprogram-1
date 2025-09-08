@@ -10,6 +10,40 @@
       <text class="subtitle">提升您的英语发音准确度</text>
     </view>
 
+    <!-- 将手写识别区块提前，开屏即可看到 -->
+    <view class="words-section">
+      <text class="section-title">单词手写识别</text>
+      <view class="home-word-item" wx:for="{{words}}" wx:key="id">
+        <view class="home-word-row">
+          <view class="home-word-info">
+            <text class="home-word">{{item.word}}</text>
+            <text class="home-phonetic">{{item.phonetic}}</text>
+          </view>
+          <button class="hw-btn" size="mini" catchtap="togglePad" data-id="{{item.id}}">手写</button>
+        </view>
+        <view wx:if="{{showPadMap[item.id]}}" class="hw-panel">
+          <view class="hw-header">
+            <text>手写识别（{{item.word}}）</text>
+            <button class="clear-btn" size="mini" catchtap="clearPad" data-id="{{item.id}}">清空</button>
+          </view>
+          <canvas
+            class="hw-canvas"
+            canvas-id="home-canvas-{{item.id}}"
+            disable-scroll="true"
+            bindtouchstart="onCanvasTouchStart"
+            bindtouchmove="onCanvasTouchMove"
+            bindtouchend="onCanvasTouchEnd"
+            bindtouchcancel="onCanvasTouchEnd"
+            data-id="{{item.id}}"
+            style="width: 680rpx; height: 360rpx;"
+          ></canvas>
+          <view class="result">
+            <text>识别结果：{{recognizeResultMap[item.id] || '…'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
     <view class="features">
       <view class="feature-item">
         <text class="feature-icon">📚</text>
