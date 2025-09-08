@@ -1,0 +1,1064 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "selfstudy-app",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "英语接口"
+    }
+  ],
+  "paths": {
+    "/pronunciation/api/v1/word/getSyllables": {
+      "get": {
+        "summary": "获取音节拆分",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "英语接口"
+        ],
+        "parameters": [
+          {
+            "name": "word",
+            "in": "query",
+            "description": "查询的单词",
+            "required": false,
+            "example": "justification",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Authorization-Token",
+            "in": "header",
+            "description": "",
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyllableListVO"
+                },
+                "example": {
+                  "code": 200,
+                  "data": {
+                    "ipa": [
+                      "dʒ ˌʌ",
+                      "s t ə",
+                      "f ə",
+                      "k ˈeɪ",
+                      "ʃ ə",
+                      "n"
+                    ],
+                    "stressedSyllables": [
+                      [
+                        {
+                          "level": null,
+                          "sub": "JH"
+                        },
+                        {
+                          "level": 2,
+                          "sub": "AH"
+                        }
+                      ],
+                      [
+                        {
+                          "level": null,
+                          "sub": "S"
+                        },
+                        {
+                          "level": null,
+                          "sub": "T"
+                        },
+                        {
+                          "level": 0,
+                          "sub": "AH"
+                        }
+                      ],
+                      [
+                        {
+                          "level": null,
+                          "sub": "F"
+                        },
+                        {
+                          "level": 0,
+                          "sub": "AH"
+                        }
+                      ],
+                      [
+                        {
+                          "level": null,
+                          "sub": "K"
+                        },
+                        {
+                          "level": 1,
+                          "sub": "EY"
+                        }
+                      ],
+                      [
+                        {
+                          "level": null,
+                          "sub": "SH"
+                        },
+                        {
+                          "level": 0,
+                          "sub": "AH"
+                        }
+                      ],
+                      [
+                        {
+                          "level": null,
+                          "sub": "N"
+                        }
+                      ]
+                    ],
+                    "syllables": [
+                      "JH AH2",
+                      "S T AH0",
+                      "F AH0",
+                      "K EY1",
+                      "SH AH0",
+                      "N"
+                    ]
+                  },
+                  "message": "成功"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/pronunciation/api/v1/word/getPhonemes": {
+      "get": {
+        "summary": "获取音素拆分",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "英语接口"
+        ],
+        "parameters": [
+          {
+            "name": "word",
+            "in": "query",
+            "description": "查询的单词",
+            "required": false,
+            "example": "justification",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Authorization-Token",
+            "in": "header",
+            "description": "",
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/AllPhoneme"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "examples": {
+                  "1": {
+                    "summary": "示例 1",
+                    "value": {
+                      "code": 200,
+                      "data": {
+                        "arpaPhoneme": [
+                          "S",
+                          "K",
+                          "UW",
+                          "L",
+                          "B",
+                          "AE",
+                          "G"
+                        ],
+                        "letterToArpaIndices": {
+                          "0": [
+                            "S"
+                          ],
+                          "1": [
+                            "K"
+                          ],
+                          "2": [
+                            "K"
+                          ],
+                          "3": [
+                            "UW"
+                          ],
+                          "4": [
+                            "UW"
+                          ],
+                          "5": [
+                            "L"
+                          ],
+                          "6": [
+                            "B"
+                          ],
+                          "7": [
+                            "AE"
+                          ],
+                          "8": [
+                            "G"
+                          ]
+                        },
+                        "phonemes": [
+                          {
+                            "arpaPhoneme": "S",
+                            "ipaPhoneme": "s",
+                            "letters": "s"
+                          },
+                          {
+                            "arpaPhoneme": "K",
+                            "ipaPhoneme": "k",
+                            "letters": "ch"
+                          },
+                          {
+                            "arpaPhoneme": "UW",
+                            "ipaPhoneme": "u",
+                            "letters": "oo"
+                          },
+                          {
+                            "arpaPhoneme": "L",
+                            "ipaPhoneme": "l",
+                            "letters": "l"
+                          },
+                          {
+                            "arpaPhoneme": "B",
+                            "ipaPhoneme": "b",
+                            "letters": "b"
+                          },
+                          {
+                            "arpaPhoneme": "AE",
+                            "ipaPhoneme": "æ",
+                            "letters": "a"
+                          },
+                          {
+                            "arpaPhoneme": "G",
+                            "ipaPhoneme": "ɡ",
+                            "letters": "g"
+                          }
+                        ],
+                        "syllableBlocks": [
+                          {
+                            "arpa": "S K UW1 L",
+                            "ipa": "s k ˈu l",
+                            "letters_range": [
+                              0,
+                              4
+                            ],
+                            "letters_span": "schoo",
+                            "stress": 1,
+                            "token_range": [
+                              0,
+                              3
+                            ]
+                          },
+                          {
+                            "arpa": "L B AE2 G",
+                            "ipa": "l b ˌæ ɡ",
+                            "letters_range": [
+                              5,
+                              8
+                            ],
+                            "letters_span": "lbag",
+                            "stress": 2,
+                            "token_range": [
+                              3,
+                              6
+                            ]
+                          }
+                        ]
+                      },
+                      "message": "成功"
+                    }
+                  },
+                  "2": {
+                    "summary": "示例 2",
+                    "value": {
+                      "code": 200,
+                      "data": {
+                        "arpaPhoneme": [
+                          "S",
+                          "K",
+                          "UW",
+                          "L",
+                          "B",
+                          "AE",
+                          "G"
+                        ],
+                        "letterToArpaIndices": {
+                          "0": [
+                            "S"
+                          ],
+                          "1": [
+                            "K"
+                          ],
+                          "2": [
+                            "K"
+                          ],
+                          "3": [
+                            "UW"
+                          ],
+                          "4": [
+                            "UW"
+                          ],
+                          "5": [
+                            "L"
+                          ],
+                          "6": [
+                            "B"
+                          ],
+                          "7": [
+                            "AE"
+                          ],
+                          "8": [
+                            "G"
+                          ]
+                        },
+                        "phonemes": [
+                          {
+                            "arpaPhoneme": "S",
+                            "ipaPhoneme": "s",
+                            "letters": "s"
+                          },
+                          {
+                            "arpaPhoneme": "K",
+                            "ipaPhoneme": "k",
+                            "letters": "ch"
+                          },
+                          {
+                            "arpaPhoneme": "UW",
+                            "ipaPhoneme": "u",
+                            "letters": "oo"
+                          },
+                          {
+                            "arpaPhoneme": "L",
+                            "ipaPhoneme": "l",
+                            "letters": "l"
+                          },
+                          {
+                            "arpaPhoneme": "B",
+                            "ipaPhoneme": "b",
+                            "letters": "b"
+                          },
+                          {
+                            "arpaPhoneme": "AE",
+                            "ipaPhoneme": "æ",
+                            "letters": "a"
+                          },
+                          {
+                            "arpaPhoneme": "G",
+                            "ipaPhoneme": "ɡ",
+                            "letters": "g"
+                          }
+                        ],
+                        "syllableBlocks": [
+                          {
+                            "arpa": "S K UW1 L",
+                            "ipa": "s k ˈu l",
+                            "letters_range": [
+                              0,
+                              4
+                            ],
+                            "letters_span": "schoo",
+                            "stress": 1,
+                            "token_range": [
+                              0,
+                              3
+                            ]
+                          },
+                          {
+                            "arpa": "L B AE2 G",
+                            "ipa": "l b ˌæ ɡ",
+                            "letters_range": [
+                              5,
+                              8
+                            ],
+                            "letters_span": "lbag",
+                            "stress": 2,
+                            "token_range": [
+                              3,
+                              6
+                            ]
+                          }
+                        ]
+                      },
+                      "message": "成功"
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/pronunciation/api/v1/word/getAudio": {
+      "get": {
+        "summary": "获取读音音频",
+        "deprecated": false,
+        "description": "获取单词的音频WAV文件",
+        "tags": [
+          "英语接口"
+        ],
+        "parameters": [
+          {
+            "name": "word",
+            "in": "query",
+            "description": "要生成音频的单词",
+            "required": false,
+            "example": "justification",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dialect",
+            "in": "query",
+            "description": "UK或US、英式发音或美式发音",
+            "required": false,
+            "example": "US",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "male",
+            "in": "query",
+            "description": "M（男性）或F（女性）",
+            "required": false,
+            "example": "M",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Authorization-Token",
+            "in": "header",
+            "description": "",
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "audio/vnd.wave": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/pronunciation/api/v1/word/getSplit": {
+      "get": {
+        "summary": "获取单词拆分",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "英语接口"
+        ],
+        "parameters": [
+          {
+            "name": "word",
+            "in": "query",
+            "description": "查询单词",
+            "required": false,
+            "example": "helicopter",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Authorization-Token",
+            "in": "header",
+            "description": "",
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message",
+                    "data"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "data": [
+                    "he",
+                    "li",
+                    "cop",
+                    "ter"
+                  ],
+                  "message": "成功"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/pronunciation/api/v1/health": {
+      "get": {
+        "summary": "检查服务可用性",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "英语接口"
+        ],
+        "parameters": [
+          {
+            "name": "X-Authorization-Token",
+            "in": "header",
+            "description": "",
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "status"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "message"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "data": {
+                    "status": "healthy"
+                  },
+                  "message": "服务正常"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/pronunciation/api/v1/word/getAudioPhoneme": {
+      "get": {
+        "summary": "获取音频和音节的对应",
+        "deprecated": false,
+        "description": "返回音频的时间段到音节的ARPA音标的对应，可以获取每个音标的播放时间索引",
+        "tags": [
+          "英语接口"
+        ],
+        "parameters": [
+          {
+            "name": "word",
+            "in": "query",
+            "description": "要生成音频的单词",
+            "required": false,
+            "example": "school",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dialect",
+            "in": "query",
+            "description": "UK或US、英式发音或美式发音",
+            "required": false,
+            "example": "US",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "male",
+            "in": "query",
+            "description": "M（男性）或F（女性）",
+            "required": false,
+            "example": "M",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Authorization-Token",
+            "in": "header",
+            "description": "",
+            "example": "{{token}}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AudioPhonemeVO"
+                },
+                "example": {
+                  "code": 200,
+                  "data": [
+                    {
+                      "arpa": "JH",
+                      "duration_ms": 70,
+                      "end_ms": 70,
+                      "espeak_units": [
+                        "dZ"
+                      ],
+                      "start_ms": 0
+                    },
+                    {
+                      "arpa": "AH2",
+                      "duration_ms": 33,
+                      "end_ms": 103,
+                      "espeak_units": [
+                        ",@"
+                      ],
+                      "start_ms": 70
+                    },
+                    {
+                      "arpa": "S",
+                      "duration_ms": 122,
+                      "end_ms": 225,
+                      "espeak_units": [
+                        "s"
+                      ],
+                      "start_ms": 103
+                    },
+                    {
+                      "arpa": "T",
+                      "duration_ms": 110,
+                      "end_ms": 335,
+                      "espeak_units": [
+                        "t",
+                        "_"
+                      ],
+                      "start_ms": 225
+                    },
+                    {
+                      "arpa": "AH0",
+                      "duration_ms": 21,
+                      "end_ms": 356,
+                      "espeak_units": [
+                        "@"
+                      ],
+                      "start_ms": 335
+                    },
+                    {
+                      "arpa": "F",
+                      "duration_ms": 112,
+                      "end_ms": 468,
+                      "espeak_units": [
+                        "f"
+                      ],
+                      "start_ms": 356
+                    },
+                    {
+                      "arpa": "AH0",
+                      "duration_ms": 21,
+                      "end_ms": 489,
+                      "espeak_units": [
+                        "@"
+                      ],
+                      "start_ms": 468
+                    },
+                    {
+                      "arpa": "K",
+                      "duration_ms": 140,
+                      "end_ms": 629,
+                      "espeak_units": [
+                        "k",
+                        "_"
+                      ],
+                      "start_ms": 489
+                    },
+                    {
+                      "arpa": "EY1",
+                      "duration_ms": 94,
+                      "end_ms": 723,
+                      "espeak_units": [
+                        "'eI"
+                      ],
+                      "start_ms": 629
+                    },
+                    {
+                      "arpa": "SH",
+                      "duration_ms": 137,
+                      "end_ms": 860,
+                      "espeak_units": [
+                        "S"
+                      ],
+                      "start_ms": 723
+                    },
+                    {
+                      "arpa": "AH0",
+                      "duration_ms": 33,
+                      "end_ms": 893,
+                      "espeak_units": [
+                        "@"
+                      ],
+                      "start_ms": 860
+                    },
+                    {
+                      "arpa": "N",
+                      "duration_ms": 121,
+                      "end_ms": 1014,
+                      "espeak_units": [
+                        "n"
+                      ],
+                      "start_ms": 893
+                    }
+                  ],
+                  "message": "成功"
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SyllableList": {
+        "type": "object",
+        "properties": {
+          "ipa": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "IPA音标"
+          },
+          "syllables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "ARPA音标"
+          },
+          "stressedSyllables": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "sub": {
+                    "type": "string"
+                  },
+                  "level": {
+                    "type": "integer",
+                    "title": "重读",
+                    "description": "0轻读1主重2次重",
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "sub",
+                  "level"
+                ]
+              }
+            },
+            "title": "带重音的音标"
+          }
+        },
+        "required": [
+          "ipa",
+          "syllables",
+          "stressedSyllables"
+        ]
+      },
+      "SyllableListVO": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SyllableList"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "data"
+        ]
+      },
+      "Phoneme": {
+        "type": "object",
+        "properties": {
+          "arpaPhoneme": {
+            "type": "string",
+            "title": "ARPA音标"
+          },
+          "ipaPhoneme": {
+            "type": "string",
+            "title": "IPA音标"
+          },
+          "letters": {
+            "type": "string",
+            "title": "字母"
+          }
+        },
+        "required": [
+          "arpaPhoneme",
+          "ipaPhoneme",
+          "letters"
+        ],
+        "description": "单词的ARPA/IPA音标对齐信息"
+      },
+      "PhonemesListVO": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Phoneme"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "data"
+        ]
+      },
+      "AudioPhoneme": {
+        "type": "object",
+        "properties": {
+          "arpa": {
+            "type": "string"
+          },
+          "duration_ms": {
+            "type": "integer"
+          },
+          "end_ms": {
+            "type": "integer"
+          },
+          "espeak_units": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "start_ms": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "arpa",
+          "duration_ms",
+          "end_ms",
+          "espeak_units",
+          "start_ms"
+        ]
+      },
+      "AudioPhonemeVO": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AudioPhoneme"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "data"
+        ]
+      },
+      "AllPhoneme": {
+        "type": "object",
+        "properties": {
+          "arpaPhoneme": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "ARPA音标"
+          },
+          "letterToArpaIndices": {
+            "type": "object",
+            "properties": {},
+            "description": "音标和字母对齐的索引"
+          },
+          "phonemes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Phoneme",
+              "description": "单词的ARPA/IPA音标对齐信息"
+            }
+          },
+          "syllableBlocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "arpa": {
+                  "type": "string"
+                },
+                "ipa": {
+                  "type": "string"
+                },
+                "letters_span": {
+                  "type": "string"
+                },
+                "stress": {
+                  "type": "integer"
+                },
+                "token_range": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                },
+                "letters_range": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "required": [
+                "arpa",
+                "ipa",
+                "letters_range",
+                "letters_span",
+                "stress",
+                "token_range"
+              ]
+            },
+            "description": "音节拆分和音标/字母的对其"
+          }
+        },
+        "required": [
+          "arpaPhoneme",
+          "letterToArpaIndices",
+          "phonemes",
+          "syllableBlocks"
+        ]
+      }
+    },
+    "securitySchemes": {}
+  },
+  "servers": [],
+  "security": []
+}
