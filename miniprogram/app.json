@@ -3,7 +3,8 @@
     "pages/pronunciation/pronunciation",
     "pages/index/index",
     "pages/logs/logs",
-    "pages/wordList/wordList"
+    "pages/wordList/wordList",
+    "pages/handwriting/handwriting"
   ],
   "window": {
     "navigationBarTextStyle": "black",

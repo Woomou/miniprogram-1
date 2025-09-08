@@ -108,6 +108,12 @@
           >
             <text class="btn-text">音节拆分</text>
           </view>
+          <view 
+            class="action-btn outline" 
+            bindtap="goToHandwriting"
+          >
+            <text class="btn-text">手写单词</text>
+          </view>
         </view>
       </view>
     </view>

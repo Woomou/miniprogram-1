@@ -408,6 +408,12 @@ Page({
     wx.navigateBack();
   },
 
+  goToHandwriting() {
+    const word = this.data.currentWord;
+    const param = word && word.word ? `?word=${encodeURIComponent(word.word)}` : '';
+    wx.navigateTo({ url: `/pages/handwriting/handwriting${param}` });
+  },
+
   retryTest() {
     this.setData({
       recognitionResult: '',

@@ -1,0 +1,29 @@
+<view class="hw-page">
+  <view class="hw-appbar">
+    <view class="back" bindtap="goBack">←</view>
+    <text class="title">手写单词{{currentWord ? '：' + currentWord : ''}}</text>
+    <button class="home-btn" size="mini" bindtap="goHome">返回首页</button>
+  </view>
+
+  <scroll-view scroll-y class="hw-body">
+    <view class="panel">
+      <view class="panel-header">
+        <text>在画布内手写，系统将自动识别</text>
+        <button size="mini" class="clear-btn" bindtap="clearPad">清空</button>
+      </view>
+      <canvas
+        class="hw-canvas"
+        canvas-id="hw-canvas"
+        disable-scroll="true"
+        bindtouchstart="onCanvasTouchStart"
+        bindtouchmove="onCanvasTouchMove"
+        bindtouchend="onCanvasTouchEnd"
+        bindtouchcancel="onCanvasTouchEnd"
+        style="width: 700rpx; height: 420rpx;"
+      ></canvas>
+      <view class="result">
+        <text>识别结果：{{recognized || '…'}}</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>
